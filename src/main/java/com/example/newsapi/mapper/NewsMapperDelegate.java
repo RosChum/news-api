@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class NewsMapperDelegate implements NewsMapper {
 
@@ -42,5 +43,26 @@ public abstract class NewsMapperDelegate implements NewsMapper {
         result.put(author, news);
         return result;
 
+    }
+
+    @Override
+    public List<NewsDto> convertToListDto(List<News> newsList) {
+     if (newsList == null) return null;
+
+     List<NewsDto> newsDtoList = new ArrayList<>();
+
+        newsList.forEach(news -> {
+            NewsDto newsDto = new NewsDto();
+
+            newsDto.setAuthorDto(authorMapper.convertToDto(news.getAuthor()));
+            newsDto.setTitle(news.getTitle());
+         newsDto.setDescription(news.getDescription());
+         newsDto.setCreateTime(news.getCreateTime());
+         newsDto.setUpdateTime(news.getUpdateTime());
+         newsDtoList.add(newsDto);
+
+     });
+        
+        return newsDtoList;
     }
 }
