@@ -6,7 +6,7 @@ import com.example.newsapi.model.News;
 import com.example.newsapi.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.ZonedDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +25,8 @@ public abstract class NewsMapperDelegate implements NewsMapper {
         News news = new News();
         news.setTitle(dto.getTitle());
         news.setDescription(dto.getDescription());
-        news.setCreateTime(ZonedDateTime.now());
-        news.setUpdateTime(ZonedDateTime.now());
+        news.setCreateTime(Instant.now());
+        news.setUpdateTime(Instant.now());
 
         Author author = authorRepository.findByFirstNameAndLastName(dto.getAuthorDto().getFirstName(), dto.getAuthorDto().getLastName())
                 .orElse(authorMapper.convertToEntity(dto.getAuthorDto()));
@@ -47,22 +47,22 @@ public abstract class NewsMapperDelegate implements NewsMapper {
 
     @Override
     public List<NewsDto> convertToListDto(List<News> newsList) {
-     if (newsList == null) return null;
+        if (newsList == null) return null;
 
-     List<NewsDto> newsDtoList = new ArrayList<>();
+        List<NewsDto> newsDtoList = new ArrayList<>();
 
         newsList.forEach(news -> {
             NewsDto newsDto = new NewsDto();
-
             newsDto.setAuthorDto(authorMapper.convertToDto(news.getAuthor()));
             newsDto.setTitle(news.getTitle());
-         newsDto.setDescription(news.getDescription());
-         newsDto.setCreateTime(news.getCreateTime());
-         newsDto.setUpdateTime(news.getUpdateTime());
-         newsDtoList.add(newsDto);
+            newsDto.setDescription(news.getDescription());
+            newsDto.setCreateTime(news.getCreateTime());
+            newsDto.setUpdateTime(news.getUpdateTime());
+            newsDtoList.add(newsDto);
 
-     });
-        
+        });
+
         return newsDtoList;
     }
+
 }

@@ -2,7 +2,7 @@ package com.example.newsapi.controller;
 
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.SearchDto;
-import com.example.newsapi.service.ApiService;
+import com.example.newsapi.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,10 +15,10 @@ import java.util.List;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
-public class ApiController {
+public class NewsController {
 
 
-    private final ApiService apiService;
+    private final NewsService apiService;
 
     @GetMapping
     public ResponseEntity<List<NewsDto>> getAllNews() {
@@ -38,5 +38,12 @@ public class ApiController {
         return ResponseEntity.ok(apiService.getSearch(searchDto));
     }
 
+    @PutMapping("/update/{id}/{accountId}")
+    public ResponseEntity<NewsDto> updateNews(@PathVariable(value = "id") Long newsId,@PathVariable Long accountId, @RequestBody NewsDto newsDto) {
+        return ResponseEntity.ok(apiService.updateNews(newsId,accountId, newsDto));
 
+    }
 }
+
+
+

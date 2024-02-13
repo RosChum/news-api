@@ -1,7 +1,9 @@
 package com.example.newsapi.service;
 
+import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.SearchDto;
+import com.example.newsapi.exception.ContentNotFound;
 import com.example.newsapi.mapper.AuthorMapper;
 import com.example.newsapi.mapper.NewsMapper;
 import com.example.newsapi.model.Author;
@@ -11,21 +13,21 @@ import com.example.newsapi.model.News_;
 import com.example.newsapi.repository.AuthorRepository;
 import com.example.newsapi.repository.NewsRepository;
 import com.example.newsapi.repository.NewsSpecification;
-import com.example.newsapi.util.ZonedDateTimeConvertor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.ZonedDateTime;
+import java.text.MessageFormat;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import static com.example.newsapi.repository.NewsSpecification.*;
+import static com.example.newsapi.repository.NewsSpecification.getSpecificationBetween;
+import static com.example.newsapi.repository.NewsSpecification.joinSpecificationAuthors;
 
 @Service
 @RequiredArgsConstructor
-public class ApiService {
+public class NewsService {
 
     private final AuthorRepository authorRepository;
     private final NewsRepository newsRepository;
@@ -35,8 +37,6 @@ public class ApiService {
 
 
     public List<NewsDto> getAllNews() {
-
-
         return newsMapper.convertToListDto(newsRepository.findAll());
     }
 
@@ -56,14 +56,24 @@ public class ApiService {
 
         List<News> resultSearch = newsRepository.findAll(NewsSpecification.getSpecificationLike(News_.title, searchDto.getTitleNews())
                 .and(NewsSpecification.getSpecificationLike(News_.description, searchDto.getDescriptionNews()))
-                .and(getSpecificationBetween(News_.updateTime, !searchDto.getTimeFrom().isEmpty() ? ZonedDateTimeConvertor.convertToZonedDateTime(searchDto.getTimeFrom()) : null
-                        , !searchDto.getTimeFrom().isEmpty() ? ZonedDateTimeConvertor.convertToZonedDateTime(searchDto.getTimeTo()) : null))
-                        .and(joinSpecificationAuthors(Author_.FIRST_NAME, !searchDto.getFirstNameAuthor().isEmpty()? searchDto.getFirstNameAuthor() : null))
-                        .or((joinSpecificationAuthors(Author_.LAST_NAME, !searchDto.getLastNameAuthor().isEmpty()? searchDto.getLastNameAuthor() : null))));
-
+                .and(getSpecificationBetween(News_.updateTime, !searchDto.getTimeFrom().isEmpty() ? Instant.parse(searchDto.getTimeFrom()) : null
+                        , !searchDto.getTimeTo().isEmpty() ? Instant.parse(searchDto.getTimeTo()) : null))
+                .and(joinSpecificationAuthors(Author_.FIRST_NAME, !searchDto.getFirstNameAuthor().isEmpty() ? searchDto.getFirstNameAuthor() : null))
+                .or((joinSpecificationAuthors(Author_.LAST_NAME, !searchDto.getLastNameAuthor().isEmpty() ? searchDto.getLastNameAuthor() : null))));
 
         return newsMapper.convertToListDto(resultSearch);
     }
 
+    @CheckAccessRights
+    @Transactional
+    public NewsDto updateNews(Long newsId,Long authorId, NewsDto newsDto) {
+        News existNews = newsRepository.findById(newsId).orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} для обновления  не найдена", newsId)));
+        existNews.setTitle(newsDto.getTitle());
+        existNews.setDescription(newsDto.getDescription());
+        existNews.setUpdateTime(Instant.now());
+        NewsDto resultDto = newsMapper.convertToDto(newsRepository.save(existNews));
+        resultDto.setAuthorDto(authorMapper.convertToDto(existNews.getAuthor()));
+        return resultDto;
 
+    }
 }

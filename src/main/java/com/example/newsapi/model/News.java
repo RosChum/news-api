@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 @Getter
 @Setter
@@ -21,11 +22,11 @@ public class News {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "createTime", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime createTime;
+    @Column(name = "createTime")
+    private Instant createTime;
 
-    @Column(name = "updateTime", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime updateTime;
+    @Column(name = "updateTime")
+    private Instant updateTime;
 
     @ManyToOne
     @JoinColumn(columnDefinition = "author_id", referencedColumnName = "id")

@@ -1,10 +1,14 @@
 package com.example.newsapi.aop;
 
+import com.example.newsapi.exception.AccessRightsException;
+import com.example.newsapi.repository.NewsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -18,10 +22,42 @@ import java.util.Map;
 @Slf4j
 public class AppAspect {
 
-    @Pointcut("execution(* com.example.newsapi.service.ApiService.getAllNews())")
+    @Autowired
+    private NewsRepository newsRepository;
+
+    @Pointcut("execution(* com.example.newsapi.service.NewsService.getAllNews())")
     public void checkUsers() {
     }
 
+    @Pointcut("@annotation(com.example.newsapi.annotation.CheckAccessRights)")
+    public void checkingAccessRights() {
+    }
+
+    @Before("checkingAccessRights()")
+    public void checkingAccessRightsAfterUpdateNews(JoinPoint joinPoint) {
+        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+        HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+
+        var pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
+
+        log.info(request.toString());
+
+        request.getHeaderNames().asIterator().forEachRemaining(d -> log.info(d));
+        pathVariables.forEach((k, v) -> log.info(k + "   " + v));
+
+        Long newsId = Long.valueOf(pathVariables.get("id"));
+
+        Long authorId = Long.valueOf(pathVariables.get("accountId"));
+
+        if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId().equals(authorId)){
+            throw new  AccessRightsException("Нет прав на редактирование новости");
+        };
+
+        log.info(" pathVariables  id  -  " + pathVariables);
+        log.info(" joinPoint  -  " + joinPoint.toString());
+
+
+    }
 
     @Before("checkUsers()")
     public void checkUserAfterGetAllNews() {
@@ -32,16 +68,16 @@ public class AppAspect {
 
         log.info(request.toString());
 
-        request.getHeaderNames().asIterator().forEachRemaining(d->log.info(d));
-        pathVariables.forEach((k,v) -> log.info(k + "   " + v));
+        request.getHeaderNames().asIterator().forEachRemaining(d -> log.info(d));
+        pathVariables.forEach((k, v) -> log.info(k + "   " + v));
 
 
-log.info( " request.getAttribute user-agent  "+   request.getAttribute("user-agent"));
-        log.info( " request.getAttribute accept  "+   request.getAttribute("accept"));
-        log.info( " request.getAttribute postman-token  "+   request.getAttribute("postman-token"));
-        log.info( " request.getAttribute host  "+   request.getAttribute("host"));
-        log.info( " request.getAttribute accept-encoding  "+   request.getAttribute("accept-encoding"));
-        log.info( " request.getAttribute  connection "+   request.getAttribute("connection"));
+        log.info(" request.getAttribute user-agent  " + request.getAttribute("user-agent"));
+        log.info(" request.getAttribute accept  " + request.getAttribute("accept"));
+        log.info(" request.getAttribute postman-token  " + request.getAttribute("postman-token"));
+        log.info(" request.getAttribute host  " + request.getAttribute("host"));
+        log.info(" request.getAttribute accept-encoding  " + request.getAttribute("accept-encoding"));
+        log.info(" request.getAttribute  connection " + request.getAttribute("connection"));
 
         log.info(" pathVariables  -  " + pathVariables);
 

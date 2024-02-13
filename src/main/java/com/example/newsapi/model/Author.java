@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.List;
 @Getter
@@ -26,8 +27,8 @@ public class Author {
     @Column(name = "lastName")
     private String lastName;
 
-    @Column(name = "createTime", columnDefinition = "TIMESTAMP WITH TIME ZONE")
-    private ZonedDateTime createTime;
+    @Column(name = "createTime")
+    private Instant createTime;
 
 
     @OneToMany(mappedBy = "author")

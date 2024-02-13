@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 @Getter
@@ -19,8 +20,8 @@ public class NewsDto {
 
     private AuthorDto authorDto;
 
-    private ZonedDateTime createTime;
+    private Instant createTime;
 
-    private ZonedDateTime updateTime;
+    private Instant updateTime;
 
 }

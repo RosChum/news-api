@@ -7,6 +7,7 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
 public class NewsSpecification {
@@ -21,8 +22,8 @@ public class NewsSpecification {
 
     }
 
-    public static Specification<News> getSpecificationBetween(SingularAttribute<News, ZonedDateTime> field
-            , ZonedDateTime timeFrom, ZonedDateTime timeTo) {
+    public static Specification<News> getSpecificationBetween(SingularAttribute<News, Instant> field
+            , Instant timeFrom, Instant timeTo) {
 
         if (checkValueNull(timeFrom) && checkValueNull(timeTo)) {
             return null;
@@ -38,9 +39,7 @@ public class NewsSpecification {
         }
         return (root, query, criteriaBuilder)
                 -> criteriaBuilder.between(root.get(field), timeFrom, timeTo);
-
     }
-
 
     public static Specification<News> joinSpecificationAuthors(String name, String value) {
         if (checkValueNull(value)) return null;
@@ -50,7 +49,6 @@ public class NewsSpecification {
             return criteriaBuilder.like(joinTable.get(name), "%" + value + "%");
         };
     }
-
 
     public static boolean checkValueNull(Object o) {
         return o == null;
