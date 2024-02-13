@@ -30,8 +30,7 @@ public class Author {
     @Column(name = "createTime")
     private Instant createTime;
 
-
-    @OneToMany(mappedBy = "author")
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<News> news;
 
 }

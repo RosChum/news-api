@@ -31,7 +31,6 @@ public class NewsService {
 
     private final AuthorRepository authorRepository;
     private final NewsRepository newsRepository;
-
     private final NewsMapper newsMapper;
     private final AuthorMapper authorMapper;
 
@@ -47,9 +46,7 @@ public class NewsService {
             authorRepository.save(authorAndNews.getKey());
             newsRepository.save(authorAndNews.getValue());
         }
-
         return getAllNews();
-
     }
 
     public List<NewsDto> getSearch(SearchDto searchDto) {
@@ -66,7 +63,7 @@ public class NewsService {
 
     @CheckAccessRights
     @Transactional
-    public NewsDto updateNews(Long newsId,Long authorId, NewsDto newsDto) {
+    public NewsDto updateNews(Long newsId, NewsDto newsDto) {
         News existNews = newsRepository.findById(newsId).orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} для обновления  не найдена", newsId)));
         existNews.setTitle(newsDto.getTitle());
         existNews.setDescription(newsDto.getDescription());
@@ -75,5 +72,9 @@ public class NewsService {
         resultDto.setAuthorDto(authorMapper.convertToDto(existNews.getAuthor()));
         return resultDto;
 
+    }
+
+    public void deleteNews(Long id) {
+        newsRepository.deleteById(id);
     }
 }

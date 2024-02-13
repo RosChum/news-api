@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.time.Instant;
 import java.time.ZonedDateTime;
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -32,6 +34,11 @@ public class News {
     @JoinColumn(columnDefinition = "author_id", referencedColumnName = "id")
     private Author author;
 
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
+    private List<Comment> commentList;
+
+    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
+    private List<NewsСategory> newsСategoryList;
 
 
 }
