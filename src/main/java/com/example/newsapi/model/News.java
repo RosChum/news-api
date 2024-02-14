@@ -24,10 +24,10 @@ public class News {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "createTime")
+    @Column(name = "create_time")
     private Instant createTime;
 
-    @Column(name = "updateTime")
+    @Column(name = "update_time")
     private Instant updateTime;
 
     @ManyToOne

@@ -15,7 +15,11 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerMapping;
 
+import javax.imageio.IIOException;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Aspect
 @Component
@@ -35,7 +39,7 @@ public class AppAspect {
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         var pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        Long newsId = Long.valueOf(pathVariables.get("id"));
+        Long newsId = Long.valueOf(pathVariables.get("newsId"));
         Long authorId = Long.valueOf(pathVariables.get("accountId"));
 
         if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId().equals(authorId)) {

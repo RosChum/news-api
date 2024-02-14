@@ -17,10 +17,13 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "author_Id")
+    private Long authorId;
+
     @Column(name = "text")
     private String text;
 
-    @Column(name = "timeCreated")
+    @Column(name = "time_created")
     private Instant timeCreated;
 
     @ManyToOne

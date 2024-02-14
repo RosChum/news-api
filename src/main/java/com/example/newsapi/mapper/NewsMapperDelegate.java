@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public abstract class NewsMapperDelegate implements NewsMapper {
@@ -21,27 +20,28 @@ public abstract class NewsMapperDelegate implements NewsMapper {
 
 
     @Override
-    public HashMap<Author, News> convertToEntity(NewsDto dto) {
+    public News convertToEntity(NewsDto dto) {
+        if (dto == null) return null;
+
         News news = new News();
         news.setTitle(dto.getTitle());
         news.setDescription(dto.getDescription());
         news.setCreateTime(Instant.now());
         news.setUpdateTime(Instant.now());
 
-        Author author = authorRepository.findByFirstNameAndLastName(dto.getAuthorDto().getFirstName(), dto.getAuthorDto().getLastName())
-                .orElse(authorMapper.convertToEntity(dto.getAuthorDto()));
+        Author author = authorRepository.findById(dto.getShortAuthorDto().getId())
+                .orElse(new Author());
 
-        if (author.getNews() == null) {
-            ArrayList<News> newsArrayList = new ArrayList<>();
-            newsArrayList.add(news);
-            author.setNews(newsArrayList);
-        } else {
+        if (author.getId() == null) {
+            author.setFirstName(dto.getShortAuthorDto().getFirstName());
+            author.setLastName(dto.getShortAuthorDto().getLastName());
+            author.setCreateTime(Instant.now());
+            author.setNews(new ArrayList<>());
+            authorRepository.save(author);
             author.getNews().add(news);
         }
         news.setAuthor(author);
-        HashMap<Author, News> result = new HashMap<>();
-        result.put(author, news);
-        return result;
+        return news;
 
     }
 
@@ -53,7 +53,7 @@ public abstract class NewsMapperDelegate implements NewsMapper {
 
         newsList.forEach(news -> {
             NewsDto newsDto = new NewsDto();
-            newsDto.setAuthorDto(authorMapper.convertToDto(news.getAuthor()));
+            newsDto.setShortAuthorDto(authorMapper.convertToShortDto(news.getAuthor()));
             newsDto.setTitle(news.getTitle());
             newsDto.setDescription(news.getDescription());
             newsDto.setCreateTime(news.getCreateTime());
