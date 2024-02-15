@@ -5,11 +5,10 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
-
 @Getter
 @Setter
 @ToString
-public class NewsDto {
+public class ShortNewsDto {
 
     private Long id;
 
@@ -17,10 +16,7 @@ public class NewsDto {
 
     private String description;
 
-    private ShortAuthorDto shortAuthorDto;
-
     private Instant createTime;
 
     private Instant updateTime;
-
 }

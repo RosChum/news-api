@@ -1,5 +1,6 @@
 package com.example.newsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,7 @@ public class News {
 
     @Column(name = "update_time")
     private Instant updateTime;
-
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(columnDefinition = "author_id", referencedColumnName = "id")
     private Author author;

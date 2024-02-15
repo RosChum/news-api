@@ -1,14 +1,18 @@
 package com.example.newsapi.controller;
 
 import com.example.newsapi.dto.AuthorDto;
+import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.service.BaseService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/author")
@@ -18,8 +22,9 @@ public class AuthorController implements BaseController<AuthorDto> {
 
     @Override
     @GetMapping
-    public ResponseEntity<List<AuthorDto>> getAll() {
-        return ResponseEntity.ok(service.getAll());
+    public ResponseEntity<Page<AuthorDto>> getAll(SearchDto searchDto, Pageable pageable) {
+        log.info("AuthorController getAll searchDto {} pageable {} ", searchDto, pageable);
+        return ResponseEntity.ok(service.findAll(searchDto, pageable));
     }
 
     @GetMapping("/{id}")

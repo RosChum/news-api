@@ -24,6 +24,6 @@ public class AuthorDto {
 
     private String createTime;
 
-    private List<News> news;
+    private List<ShortNewsDto> news;
 
 }

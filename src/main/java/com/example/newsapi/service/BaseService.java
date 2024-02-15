@@ -1,10 +1,14 @@
 package com.example.newsapi.service;
 
+import com.example.newsapi.dto.SearchDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 
 public interface BaseService<T> {
 
-    List<T> getAll();
+    Page<T> findAll(SearchDto searchDto, Pageable pageable);
 
     T findById(Long id);
 

@@ -1,5 +1,6 @@
 package com.example.newsapi.dto;
 
+import com.example.newsapi.model.TypeNewsCategory;
 import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +14,10 @@ import java.time.ZonedDateTime;
 @ToString
 public class SearchDto {
 
+    private Long authorId;
+
+    private Long itemId;
+
     private String titleNews;
 
     private String descriptionNews;
@@ -24,6 +29,8 @@ public class SearchDto {
     private String timeFrom;
 
     private String timeTo;
+
+    private String newsCategory;
 
 
 }

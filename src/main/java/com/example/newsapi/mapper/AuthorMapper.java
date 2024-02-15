@@ -16,6 +16,7 @@ public interface AuthorMapper {
 
     @Mapping(target = "createTime", expression = "java(Instant.now())")
     @Mapping(target = "news", expression = "java(author.getNews() == null ? new ArrayList<>():author.getNews())")
+    @Mapping(target = "id", ignore = true)
     Author convertToEntity(AuthorDto authorDto);
 
     AuthorDto convertToDto(Author author);

@@ -6,22 +6,17 @@ import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.exception.ContentNotFound;
 import com.example.newsapi.mapper.AuthorMapper;
 import com.example.newsapi.mapper.NewsMapper;
-import com.example.newsapi.model.Author_;
 import com.example.newsapi.model.News;
-import com.example.newsapi.model.News_;
 import com.example.newsapi.repository.AuthorRepository;
 import com.example.newsapi.repository.NewsRepository;
-import com.example.newsapi.repository.NewsSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.Instant;
-import java.util.List;
-
-import static com.example.newsapi.repository.NewsSpecification.getSpecificationBetween;
-import static com.example.newsapi.repository.NewsSpecification.joinSpecificationAuthors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +30,8 @@ public class NewsService implements BaseService<NewsDto> {
 
 
     @Override
-    public List<NewsDto> getAll() {
-        return newsMapper.convertToListDto(newsRepository.findAll());
+    public Page<NewsDto> findAll(SearchDto searchDto, Pageable pageable) {
+        return null;
     }
 
     @Override
@@ -71,14 +66,5 @@ public class NewsService implements BaseService<NewsDto> {
         newsRepository.deleteById(id);
     }
 
-    public List<NewsDto> getSearch(SearchDto searchDto) {
-        List<News> resultSearch = newsRepository.findAll(NewsSpecification.getSpecificationLike(News_.title, searchDto.getTitleNews())
-                .and(NewsSpecification.getSpecificationLike(News_.description, searchDto.getDescriptionNews()))
-                .and(getSpecificationBetween(News_.updateTime, !searchDto.getTimeFrom().isEmpty() ? Instant.parse(searchDto.getTimeFrom()) : null
-                        , !searchDto.getTimeTo().isEmpty() ? Instant.parse(searchDto.getTimeTo()) : null))
-                .and(joinSpecificationAuthors(Author_.FIRST_NAME, !searchDto.getFirstNameAuthor().isEmpty() ? searchDto.getFirstNameAuthor() : null))
-                .or((joinSpecificationAuthors(Author_.LAST_NAME, !searchDto.getLastNameAuthor().isEmpty() ? searchDto.getLastNameAuthor() : null))));
-        return newsMapper.convertToListDto(resultSearch);
-    }
 
 }

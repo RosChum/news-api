@@ -6,6 +6,8 @@ import com.example.newsapi.service.BaseService;
 import com.example.newsapi.service.NewsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,8 +25,8 @@ public class NewsController implements BaseController<NewsDto> {
 
     @GetMapping
     @Override
-    public ResponseEntity<List<NewsDto>> getAll() {
-        return ResponseEntity.ok().body(newsService.getAll());
+    public ResponseEntity<Page<NewsDto>> getAll(SearchDto searchDto, Pageable pageable) {
+        return ResponseEntity.ok().body(newsService.findAll(searchDto, pageable));
     }
 
     @GetMapping("/{id}")
@@ -52,11 +54,6 @@ public class NewsController implements BaseController<NewsDto> {
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         newsService.deleteById(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<List<NewsDto>> searchNews(@RequestBody SearchDto searchDto) {
-        return ResponseEntity.ok(newsService.getSearch(searchDto));
     }
 
 }
