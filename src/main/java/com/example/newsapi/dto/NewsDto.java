@@ -1,10 +1,13 @@
 package com.example.newsapi.dto;
 
+import com.example.newsapi.model.NewsСategory;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,5 +25,11 @@ public class NewsDto {
     private Instant createTime;
 
     private Instant updateTime;
+
+    private List<NewsCategoryDto> newsCategory;
+
+    private Integer countComment;
+
+    private List<CommentDto> commentDtos;
 
 }

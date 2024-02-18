@@ -19,4 +19,6 @@ public class ShortNewsDto {
     private Instant createTime;
 
     private Instant updateTime;
+
+
 }

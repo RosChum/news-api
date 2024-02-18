@@ -14,9 +14,8 @@ public class NewsСategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
     @Column(name = "type_news_category")
-    private TypeNewsCategory typeNewsCategory;
+    private String typeNewsCategory;
 
     @ManyToOne
     @JoinColumn(columnDefinition = "news_id", referencedColumnName = "id")

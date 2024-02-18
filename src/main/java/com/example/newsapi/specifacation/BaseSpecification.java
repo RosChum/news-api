@@ -1,14 +1,14 @@
 package com.example.newsapi.specifacation;
 
-import com.example.newsapi.model.Author;
-import com.example.newsapi.model.Author_;
-import com.example.newsapi.model.News;
-import com.example.newsapi.model.News_;
+import com.example.newsapi.model.*;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.xml.catalog.Catalog;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Supplier;
 
 public class BaseSpecification {
@@ -26,7 +26,6 @@ public class BaseSpecification {
                 return criteriaBuilder.like(root.get(field), value);
             };
         });
-
     }
 
     public static <T> Specification<T> getBetween(SingularAttribute<T, Instant> field
@@ -48,6 +47,17 @@ public class BaseSpecification {
     }
 
 
+    public static <T, V> Specification<T> getInCategoryNews( Collection<V> value){
+     return checkValueNull(value, ()->{
+            return (root, query, criteriaBuilder) -> {
+                query.distinct(true);
+                Join<News, NewsСategory> newsСategoryJoin = root.join(News_.NEWSСATEGORY_LIST);
+              return newsСategoryJoin.get(NewsСategory_.TYPE_NEWS_CATEGORY).in(value);
+            };
+        });
+    }
+
+
     public static Specification<News> joinAuthors(String name, String value) {
         return checkValueNull(value, () -> {
             return (root, query, criteriaBuilder) -> {
@@ -57,6 +67,7 @@ public class BaseSpecification {
         });
     }
 
+    // TODO здесь не правильно
 
     public static Specification<Author> joinNews(Long authorId) {
         return checkValueNull(authorId, () -> {
@@ -65,22 +76,15 @@ public class BaseSpecification {
                 return criteriaBuilder.equal(newsJoin.get(News_.author), authorId);
             };
         });
-
     }
 
 
     private static <T, V> Specification<T> checkValueNull(V value, Supplier<Specification<T>> supplier) {
-
         return value == null ? ((root, query, builder) -> null) : supplier.get();
-
-
     }
 
     private static <T, V> Specification<T> checkValueNull(V value1, V value2, Supplier<Specification<T>> supplier) {
-
         return value1 == null && value2 == null ? ((root, query, builder) -> null) : supplier.get();
-
-
     }
 
 }
