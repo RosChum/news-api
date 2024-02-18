@@ -52,7 +52,7 @@ public class BaseSpecification {
             return (root, query, criteriaBuilder) -> {
                 query.distinct(true);
                 Join<News, NewsСategory> newsСategoryJoin = root.join(News_.NEWSСATEGORY_LIST);
-              return newsСategoryJoin.get(NewsСategory_.TYPE_NEWS_CATEGORY).in(value);
+              return newsСategoryJoin.get(NewsСategory_.NEWS_CATEGORY).in(value);
             };
         });
     }

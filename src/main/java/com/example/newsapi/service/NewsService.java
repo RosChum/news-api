@@ -48,7 +48,7 @@ public class NewsService implements BaseService<NewsDto> {
         Page<News> newsPage = newsRepository.findAll(getSpecification(searchDto), pageable);
         return new PageImpl<>(newsPage.map(news -> {
             NewsDto newsDto = new NewsDto();
-            newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
+//            newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
             newsDto.setId(news.getId());
             newsDto.setTitle(news.getTitle());
             newsDto.setDescription(news.getDescription());
@@ -66,7 +66,7 @@ public class NewsService implements BaseService<NewsDto> {
                 .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найдена", id)));
         NewsDto newsDto = newsMapper.convertToDto(news);
         newsDto.setShortAuthorDto(authorMapper.convertToShortDto(news.getAuthor()));
-        newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
+//        newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         newsDto.setCommentDtos(commentMapper.convertToListDto(news.getCommentList()));
         return newsDto;
     }

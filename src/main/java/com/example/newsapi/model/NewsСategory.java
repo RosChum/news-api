@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
@@ -15,9 +17,8 @@ public class NewsСategory {
     private Long id;
 
     @Column(name = "type_news_category")
-    private String typeNewsCategory;
+    private String newsCategory;
 
-    @ManyToOne
-    @JoinColumn(columnDefinition = "news_id", referencedColumnName = "id")
-    private News news;
+    @OneToMany(mappedBy = "newsСategoryList")
+    private List<News> news;
 }

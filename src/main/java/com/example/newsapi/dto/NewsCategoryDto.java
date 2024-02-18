@@ -11,6 +11,6 @@ public class NewsCategoryDto {
 
     private Long id;
 
-    private
+    private String newsCategory;
 
 }

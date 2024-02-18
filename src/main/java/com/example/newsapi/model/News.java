@@ -38,8 +38,9 @@ public class News {
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     private List<Comment> commentList;
 
-    @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
-    private List<NewsСategory> newsСategoryList;
+    @ManyToOne
+    @JoinColumn(columnDefinition = "category_news_id", referencedColumnName = "id")
+    private NewsСategory newsСategoryList;
 
 
 }

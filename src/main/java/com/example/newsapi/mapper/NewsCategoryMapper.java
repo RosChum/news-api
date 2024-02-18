@@ -13,7 +13,7 @@ public interface NewsCategoryMapper {
 
     List<NewsСategory> convertToListEntity(List<NewsCategoryDto> categoryList);
 
-    NewsCategoryDto convertToDTO(NewsСategory newsСategory);
+    NewsCategoryDto convertToDto(NewsСategory newsСategory);
 
     List<NewsCategoryDto> convertToListDto(List<NewsСategory> newsСategories);
 }
