@@ -94,10 +94,12 @@ public class NewsService implements BaseService<NewsDto> {
         existNews.setDescription(dto.getDescription());
         existNews.setUpdateTime(Instant.now());
         NewsDto resultDto = newsMapper.convertToDto(newsRepository.save(existNews));
-        resultDto.setShortAuthorDto(authorMapper.convertToShortDto(existNews.getAuthor()));
+        resultDto.setShortAuthorDto(authorMapper.convertToShortDto(authorRepository.findById(dto.getShortAuthorDto().getId()).orElseThrow()));
+        resultDto.setNewsCategory(newsCategoryMapper.convertToListDto(existNews.getNewsСategoryList()));
         return resultDto;
     }
 
+    @CheckAccessRights
     @Override
     public void deleteById(Long id) {
         newsRepository.deleteById(id);

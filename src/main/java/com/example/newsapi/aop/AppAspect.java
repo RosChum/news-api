@@ -34,7 +34,7 @@ public class AppAspect {
     }
 
     @Before("checkingAccessRights()")
-    public void checkingAccessRightsAfterUpdateNews(JoinPoint joinPoint) {
+    public void checkingAccessRightsAfterUpdateNews() {
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         var pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
@@ -43,6 +43,7 @@ public class AppAspect {
         Long authorId = Long.valueOf(pathVariables.get("accountId"));
 
         if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId().equals(authorId)) {
+
             throw new AccessRightsException("Нет прав на редактирование новости");
         }
     }

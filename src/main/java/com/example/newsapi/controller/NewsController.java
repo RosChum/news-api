@@ -26,8 +26,7 @@ public class NewsController implements BaseController<NewsDto> {
     @GetMapping
     @Override
     public ResponseEntity<Page<NewsDto>> getAll(SearchDto searchDto, Pageable pageable) {
-
-        log.info(" NewsController  getAll SearchDto " + searchDto);
+        log.info("NewsController getAll SearchDto " + searchDto);
         return ResponseEntity.ok().body(newsService.findAll(searchDto, pageable));
     }
 
@@ -40,20 +39,20 @@ public class NewsController implements BaseController<NewsDto> {
     @PostMapping("/add")
     @Override
     public ResponseEntity<NewsDto> create(@RequestBody NewsDto dto) {
-        log.info(" create " + dto);
+        log.info("create " + dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.create(dto));
     }
 
     @PutMapping("/update/{newsId}/{accountId}")
     @Override
     public ResponseEntity<NewsDto> update(@PathVariable(value = "newsId") Long id, @RequestBody NewsDto dto) {
-        log.info(" create " + id + " " + dto);
+        log.info("update " + id + " " + dto);
         return ResponseEntity.ok(newsService.update(id, dto));
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{newsId}/{accountId}")
     @Override
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteById(@PathVariable(value = "newsId") Long id) {
         newsService.deleteById(id);
         return ResponseEntity.ok().build();
     }

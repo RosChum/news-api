@@ -1,38 +1,48 @@
 package com.example.newsapi.controller;
 
+import com.example.newsapi.dto.NewsCategoryDto;
 import com.example.newsapi.dto.SearchDto;
-import com.example.newsapi.model.NewsСategory;
+import com.example.newsapi.service.NewsCategoryService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/category")
-public class NewsCategoryController implements BaseController<NewsСategory>{
-    @Override
-    public ResponseEntity<Page<NewsСategory>> getAll(SearchDto searchDto, Pageable pageable) {
-        return null;
+@RequiredArgsConstructor
+public class NewsCategoryController {
+
+    private final NewsCategoryService newsCategoryService;
+
+    @GetMapping
+    public ResponseEntity<Page<NewsCategoryDto>> getAll(SearchDto searchDto, Pageable pageable) {
+        return ResponseEntity.ok(newsCategoryService.findAll(pageable));
     }
 
-    @Override
-    public ResponseEntity<NewsСategory> findById(Long id) {
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<NewsCategoryDto> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(newsCategoryService.findById(id));
     }
 
-    @Override
-    public ResponseEntity<NewsСategory> create(NewsСategory dto) {
-        return null;
+
+    @PostMapping("/add")
+    public ResponseEntity<List<NewsCategoryDto>> create(@RequestBody List<NewsCategoryDto> dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(newsCategoryService.create(dto));
     }
 
-    @Override
-    public ResponseEntity<NewsСategory> update(Long id, NewsСategory dto) {
-        return null;
+    @PutMapping("/update")
+    public ResponseEntity<NewsCategoryDto> update(@RequestBody NewsCategoryDto dto) {
+        return ResponseEntity.ok().body(newsCategoryService.update(dto));
     }
 
-    @Override
-    public ResponseEntity<Void> deleteById(Long id) {
-        return null;
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
+        newsCategoryService.delete(id);
+        return ResponseEntity.ok().build();
     }
 }
