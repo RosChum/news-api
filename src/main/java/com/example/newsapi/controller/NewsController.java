@@ -26,6 +26,8 @@ public class NewsController implements BaseController<NewsDto> {
     @GetMapping
     @Override
     public ResponseEntity<Page<NewsDto>> getAll(SearchDto searchDto, Pageable pageable) {
+
+        log.info(" NewsController  getAll SearchDto " + searchDto);
         return ResponseEntity.ok().body(newsService.findAll(searchDto, pageable));
     }
 

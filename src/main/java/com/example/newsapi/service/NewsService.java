@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.Instant;
+import java.util.ArrayList;
 
 import static com.example.newsapi.specifacation.BaseSpecification.getBetween;
 import static com.example.newsapi.specifacation.BaseSpecification.getLike;
@@ -41,6 +42,7 @@ public class NewsService implements BaseService<NewsDto> {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final NewsCategoryMapper newsCategoryMapper;
+    private final NewsCategoryService newsCategoryService;
 
 
     @Override
@@ -48,7 +50,7 @@ public class NewsService implements BaseService<NewsDto> {
         Page<News> newsPage = newsRepository.findAll(getSpecification(searchDto), pageable);
         return new PageImpl<>(newsPage.map(news -> {
             NewsDto newsDto = new NewsDto();
-//            newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
+            newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
             newsDto.setId(news.getId());
             newsDto.setTitle(news.getTitle());
             newsDto.setDescription(news.getDescription());
@@ -66,17 +68,19 @@ public class NewsService implements BaseService<NewsDto> {
                 .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найдена", id)));
         NewsDto newsDto = newsMapper.convertToDto(news);
         newsDto.setShortAuthorDto(authorMapper.convertToShortDto(news.getAuthor()));
-//        newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
+        newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         newsDto.setCommentDtos(commentMapper.convertToListDto(news.getCommentList()));
         return newsDto;
     }
 
     @Override
     public NewsDto create(NewsDto dto) {
-        NewsDto newsDto = newsMapper.convertToDto(newsRepository.save(newsMapper.convertToEntity(dto)));
+        News news = newsMapper.convertToEntity(dto);
+        news.setNewsСategoryList(newsCategoryMapper.convertToListEntity(newsCategoryService.create(dto.getNewsCategory())));
+        news.setCommentList(new ArrayList<>());
+        NewsDto newsDto = newsMapper.convertToDto(newsRepository.save(news));
         newsDto.setShortAuthorDto(authorMapper.convertToShortDto(authorRepository.findById(dto.getShortAuthorDto().getId()).orElseThrow()));
-
-
+        newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         return newsDto;
     }
 

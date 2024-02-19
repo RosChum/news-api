@@ -30,6 +30,7 @@ public class News {
 
     @Column(name = "update_time")
     private Instant updateTime;
+
     @JsonBackReference
     @ManyToOne
     @JoinColumn(columnDefinition = "author_id", referencedColumnName = "id")
@@ -38,9 +39,10 @@ public class News {
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     private List<Comment> commentList;
 
-    @ManyToOne
-    @JoinColumn(columnDefinition = "category_news_id", referencedColumnName = "id")
-    private NewsСategory newsСategoryList;
+    @ManyToMany
+    @JoinTable(name = "category_news", joinColumns = @JoinColumn(name = "news_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id"))
+    private List<NewsСategory> newsСategoryList;
 
 
 }

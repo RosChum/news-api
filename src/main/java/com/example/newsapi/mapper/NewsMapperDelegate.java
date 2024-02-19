@@ -44,7 +44,6 @@ public abstract class NewsMapperDelegate implements NewsMapper {
             author.getNews().add(news);
         }
         news.setAuthor(author);
-//        news.setNewsСategoryList(newsCategoryMapper.convertToListEntity(dto.getNewsCategory()));
 
         return news;
 

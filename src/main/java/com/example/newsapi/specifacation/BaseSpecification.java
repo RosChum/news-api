@@ -47,7 +47,7 @@ public class BaseSpecification {
     }
 
 
-    public static <T, V> Specification<T> getInCategoryNews( Collection<V> value){
+    public static <T, V> Specification<T> getInCategoryNews(Collection<V> value){
      return checkValueNull(value, ()->{
             return (root, query, criteriaBuilder) -> {
                 query.distinct(true);
