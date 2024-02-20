@@ -37,15 +37,6 @@ public abstract class NewsMapperDelegate implements NewsMapper {
         Author author = authorRepository.findById(dto.getShortAuthorDto().getId())
                 .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Автор с id {0} для создания новости не найден", dto.getShortAuthorDto().getId())));
 
-        if (author.getId() == null) {
-            author.setFirstName(dto.getShortAuthorDto().getFirstName());
-            author.setLastName(dto.getShortAuthorDto().getLastName());
-            author.setCreateTime(Instant.now());
-            author.setNews(new ArrayList<>());
-            authorRepository.save(author);
-
-        }
-
         author.getNews().add(news);
         news.setAuthor(author);
 
