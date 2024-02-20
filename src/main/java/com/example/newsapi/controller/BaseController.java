@@ -5,11 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
+public interface BaseController<T> {
 
-public interface BaseController <T>{
-
-    ResponseEntity<Page<T>> getAll(SearchDto searchDto, Pageable pageable);
+    default ResponseEntity<Page<T>> getAll(SearchDto searchDto, Pageable pageable) {
+        return null;
+    }
 
     ResponseEntity<T> findById(Long id);
 

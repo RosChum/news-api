@@ -2,11 +2,13 @@ package com.example.newsapi.mapper;
 
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.ShortNewsDto;
+import com.example.newsapi.exception.ContentNotFound;
 import com.example.newsapi.model.Author;
 import com.example.newsapi.model.News;
 import com.example.newsapi.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public abstract class NewsMapperDelegate implements NewsMapper {
         news.setUpdateTime(Instant.now());
 
         Author author = authorRepository.findById(dto.getShortAuthorDto().getId())
-                .orElse(new Author());
+                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Автор с id {0} для создания новости не найден", dto.getShortAuthorDto().getId())));
 
         if (author.getId() == null) {
             author.setFirstName(dto.getShortAuthorDto().getFirstName());
@@ -41,8 +43,10 @@ public abstract class NewsMapperDelegate implements NewsMapper {
             author.setCreateTime(Instant.now());
             author.setNews(new ArrayList<>());
             authorRepository.save(author);
-            author.getNews().add(news);
+
         }
+
+        author.getNews().add(news);
         news.setAuthor(author);
 
         return news;

@@ -4,7 +4,6 @@ import com.example.newsapi.exception.AccessRightsException;
 import com.example.newsapi.repository.NewsRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -15,11 +14,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerMapping;
 
-import javax.imageio.IIOException;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Aspect
 @Component
@@ -39,7 +34,7 @@ public class AppAspect {
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         var pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
-        Long newsId = Long.valueOf(pathVariables.get("newsId"));
+        Long newsId = Long.valueOf(pathVariables.get("id"));
         Long authorId = Long.valueOf(pathVariables.get("accountId"));
 
         if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId().equals(authorId)) {

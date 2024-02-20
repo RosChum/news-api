@@ -3,6 +3,7 @@ package com.example.newsapi.controller;
 import com.example.newsapi.dto.NewsCategoryDto;
 import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.service.NewsCategoryService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,12 +32,12 @@ public class NewsCategoryController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<List<NewsCategoryDto>> create(@RequestBody List<NewsCategoryDto> dto) {
+    public ResponseEntity<List<NewsCategoryDto>> create(@RequestBody @Valid List<NewsCategoryDto> dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsCategoryService.create(dto));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<NewsCategoryDto> update(@RequestBody NewsCategoryDto dto) {
+    public ResponseEntity<NewsCategoryDto> update(@RequestBody @Valid NewsCategoryDto dto) {
         return ResponseEntity.ok().body(newsCategoryService.update(dto));
     }
 

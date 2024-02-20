@@ -5,14 +5,11 @@ import jakarta.persistence.criteria.Join;
 import jakarta.persistence.metamodel.SingularAttribute;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.xml.catalog.Catalog;
 import java.time.Instant;
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Supplier;
 
 public class BaseSpecification {
-
 
     public static <T> Specification<T> getEqual(SingularAttribute<T, String> field, String value) {
         return checkValueNull(value, () -> (root, query, criteriaBuilder) -> {
@@ -47,12 +44,12 @@ public class BaseSpecification {
     }
 
 
-    public static <T, V> Specification<T> getInCategoryNews(Collection<V> value){
-     return checkValueNull(value, ()->{
+    public static <T, V> Specification<T> getInCategoryNews(Collection<V> value) {
+        return checkValueNull(value, () -> {
             return (root, query, criteriaBuilder) -> {
                 query.distinct(true);
                 Join<News, NewsСategory> newsСategoryJoin = root.join(News_.NEWSСATEGORY_LIST);
-              return newsСategoryJoin.get(NewsСategory_.NEWS_CATEGORY).in(value);
+                return newsСategoryJoin.get(NewsСategory_.NEWS_CATEGORY).in(value);
             };
         });
     }
@@ -67,8 +64,6 @@ public class BaseSpecification {
         });
     }
 
-    // TODO здесь не правильно
-
     public static Specification<Author> joinNews(Long authorId) {
         return checkValueNull(authorId, () -> {
             return (root, query, criteriaBuilder) -> {
@@ -77,7 +72,6 @@ public class BaseSpecification {
             };
         });
     }
-
 
     private static <T, V> Specification<T> checkValueNull(V value, Supplier<Specification<T>> supplier) {
         return value == null ? ((root, query, builder) -> null) : supplier.get();

@@ -1,5 +1,6 @@
 package com.example.newsapi.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,8 +18,10 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "author_Id")
-    private Long authorId;
+    @JsonBackReference
+    @ManyToOne()
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
+    private Author author;
 
     @Column(name = "text")
     private String text;

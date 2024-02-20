@@ -3,6 +3,7 @@ package com.example.newsapi.controller;
 import com.example.newsapi.dto.AuthorDto;
 import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.service.BaseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -35,13 +35,13 @@ public class AuthorController implements BaseController<AuthorDto> {
 
     @PostMapping
     @Override
-    public ResponseEntity<AuthorDto> create(@RequestBody AuthorDto dto) {
+    public ResponseEntity<AuthorDto> create(@RequestBody @Valid AuthorDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto));
     }
 
     @PutMapping("/{id}")
     @Override
-    public ResponseEntity<AuthorDto> update(@PathVariable Long id, @RequestBody AuthorDto dto) {
+    public ResponseEntity<AuthorDto> update(@PathVariable Long id, @RequestBody @Valid AuthorDto dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 

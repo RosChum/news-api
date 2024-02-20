@@ -23,7 +23,7 @@ public class NewsCategoryService {
     private final NewsCategoryRepository newsCategoryRepository;
     private final NewsCategoryMapper newsCategoryMapper;
 
-    public Page<NewsCategoryDto> findAll(Pageable pageable){
+    public Page<NewsCategoryDto> findAll(Pageable pageable) {
         Page<NewsСategory> newsСategoryPage = newsCategoryRepository.findAll(pageable);
         return new PageImpl<>(newsСategoryPage.map(newsСategory -> {
             NewsCategoryDto newsCategoryDto = new NewsCategoryDto();
@@ -33,9 +33,9 @@ public class NewsCategoryService {
         }).toList(), pageable, newsСategoryPage.getTotalElements());
     }
 
-    public NewsCategoryDto findById(Long id){
+    public NewsCategoryDto findById(Long id) {
         return newsCategoryMapper.convertToDto(newsCategoryRepository.findById(id)
-                .orElseThrow(()-> new ContentNotFound(MessageFormat.format("Категория новости с id {0} не найдена", id))));
+                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Категория новости с id {0} не найдена", id))));
     }
 
 
@@ -56,12 +56,12 @@ public class NewsCategoryService {
 
     public NewsCategoryDto update(NewsCategoryDto newsCategoryDto) {
         NewsСategory newsСategory = newsCategoryRepository.findById(newsCategoryDto.getId())
-                .orElseThrow(()-> new ContentNotFound(MessageFormat.format("Категория новости с id {0} не найдена", newsCategoryDto.getId())));
+                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Категория новости с id {0} не найдена", newsCategoryDto.getId())));
         newsСategory.setNewsCategory(newsCategoryDto.getNewsCategory());
-      return newsCategoryMapper.convertToDto(newsCategoryRepository.save(newsСategory));
+        return newsCategoryMapper.convertToDto(newsCategoryRepository.save(newsСategory));
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         newsCategoryRepository.deleteById(id);
     }
 

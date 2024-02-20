@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
 import java.time.Instant;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +50,7 @@ public class AuthorService implements BaseService<AuthorDto> {
 
     @Override
     public AuthorDto create(AuthorDto dto) {
-        return authorMapper.convertToDto(authorRepository.save(authorMapper.convertToEntity(dto)));
+        return authorMapper.convertToDto(authorRepository.save(authorMapper.createEntity(dto)));
     }
 
     @Override

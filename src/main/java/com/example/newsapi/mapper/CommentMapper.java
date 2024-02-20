@@ -11,6 +11,9 @@ public interface CommentMapper {
 
     CommentDto convertToDto(Comment comment);
 
-
     List<CommentDto> convertToListDto(List<Comment> comments);
+
+    Comment convertToEntity(CommentDto commentDto);
+
+    List<Comment> convertToListEntity(List<CommentDto> commentDtoList);
 }

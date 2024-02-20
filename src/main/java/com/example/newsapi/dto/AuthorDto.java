@@ -1,14 +1,10 @@
 package com.example.newsapi.dto;
 
-import com.example.newsapi.model.News;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.time.Instant;
 import java.util.List;
 
 @Getter
@@ -18,8 +14,10 @@ public class AuthorDto {
 
     private Long id;
 
+    @NotBlank(message = "Имя не должно быть пустым")
     private String firstName;
 
+    @NotBlank(message = "Фамилия не должна быть пустой")
     private String lastName;
 
     private String createTime;

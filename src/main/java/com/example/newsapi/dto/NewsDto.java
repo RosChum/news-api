@@ -1,13 +1,13 @@
 package com.example.newsapi.dto;
 
-import com.example.newsapi.model.NewsСategory;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -16,10 +16,13 @@ public class NewsDto {
 
     private Long id;
 
+    @NotBlank(message = "Заголовок новости не должен быть пустой")
     private String title;
 
+    @NotBlank(message = "Описание новости не должно быть пустым")
     private String description;
 
+    @Valid
     private ShortAuthorDto shortAuthorDto;
 
     private Instant createTime;

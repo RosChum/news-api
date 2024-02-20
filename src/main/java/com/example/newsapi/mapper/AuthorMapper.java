@@ -7,7 +7,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Mapper(componentModel = "spring", imports = Instant.class)
@@ -17,11 +16,15 @@ public interface AuthorMapper {
     @Mapping(target = "createTime", expression = "java(Instant.now())")
     @Mapping(target = "news", expression = "java(author.getNews() == null ? new ArrayList<>():author.getNews())")
     @Mapping(target = "id", ignore = true)
+    Author createEntity(AuthorDto authorDto);
+
     Author convertToEntity(AuthorDto authorDto);
 
     AuthorDto convertToDto(Author author);
 
     ShortAuthorDto convertToShortDto(Author author);
+
+    AuthorDto shortAuthorDtoConvertToDto(ShortAuthorDto shortAuthorDto);
 
     List<AuthorDto> convertToListDto(List<Author> authorList);
 }
