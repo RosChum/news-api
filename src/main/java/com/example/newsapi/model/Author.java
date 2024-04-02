@@ -16,20 +16,7 @@ import java.util.List;
 @Table(name = "author")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Author {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "create_time")
-    private Instant createTime;
+public class Author extends User {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
