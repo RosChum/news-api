@@ -14,11 +14,11 @@ public class AppUserDetails implements UserDetails {
 
     private final User user;
 
-    private Long getUserId() {
+    public Long getUserId() {
         return user.getId();
     }
 
-    private String getEmail(){
+    public String getEmail(){
         return user.getEmail();
     }
 
@@ -36,7 +36,7 @@ public class AppUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return user.getFirstName();
     }
 
     @Override
