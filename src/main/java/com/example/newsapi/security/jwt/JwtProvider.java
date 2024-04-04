@@ -20,6 +20,8 @@ public class JwtProvider {
     @Value("${app.jwt.expireToken}")
     private Duration expireToken;
 
+
+
     public String generateToken(AppUserDetails userDetails) {
         Claims claims = Jwts.claims().setSubject(userDetails.getEmail());
         claims.put("id", userDetails.getUserId());
