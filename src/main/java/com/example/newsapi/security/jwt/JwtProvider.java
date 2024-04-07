@@ -25,8 +25,7 @@ public class JwtProvider {
     public String generateToken(AppUserDetails userDetails) {
         Claims claims = Jwts.claims().setSubject(userDetails.getEmail());
         claims.put("id", userDetails.getUserId());
-        claims.put("email", userDetails.getEmail());
-        claims.put("firsName", userDetails.getUsername());
+        claims.put("email", userDetails.getUsername());
 
         return Jwts.builder()
                 .addClaims(claims)

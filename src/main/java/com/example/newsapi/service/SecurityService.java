@@ -70,7 +70,7 @@ public class SecurityService {
 
             refreshTokenService.deleteByUserId(user.getId());
             RefreshToken updateRefreshToken = refreshTokenService.createTokenByUserId(user.getId());
-            String updateAccessToken = jwtProvider.generateToken((AppUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+            String updateAccessToken = jwtProvider.generateToken((AppUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
 
             return new RefreshTokenDto(updateAccessToken, updateRefreshToken.getToken());
         }
@@ -82,6 +82,10 @@ public class SecurityService {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
         return userDetails.getUserId();
+    }
+
+    public void logout() {
+        refreshTokenService.deleteByUserId(getAuthenticationUserId());
     }
 
 
