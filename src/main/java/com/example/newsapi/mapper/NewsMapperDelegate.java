@@ -34,11 +34,11 @@ public abstract class NewsMapperDelegate implements NewsMapper {
         news.setCreateTime(Instant.now());
         news.setUpdateTime(Instant.now());
 
-        Author author = authorRepository.findById(dto.getShortAuthorDto().getId())
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Автор с id {0} для создания новости не найден", dto.getShortAuthorDto().getId())));
-
-        author.getNews().add(news);
-        news.setAuthor(author);
+//        Author author = authorRepository.findById(dto.getShortAuthorDto().getId())
+//                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Автор с id {0} для создания новости не найден", dto.getShortAuthorDto().getId())));
+//
+//        author.getNews().add(news);
+//        news.setAuthor(author);
 
         return news;
 

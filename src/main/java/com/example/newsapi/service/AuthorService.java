@@ -3,11 +3,14 @@ package com.example.newsapi.service;
 import com.example.newsapi.dto.AuthorDto;
 import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.exception.ContentNotFound;
+import com.example.newsapi.exception.UserNotFoundException;
 import com.example.newsapi.mapper.AuthorMapper;
 import com.example.newsapi.mapper.NewsMapper;
 import com.example.newsapi.model.Author;
 import com.example.newsapi.model.Author_;
+import com.example.newsapi.model.User;
 import com.example.newsapi.repository.AuthorRepository;
+import com.example.newsapi.repository.UserRepository;
 import com.example.newsapi.specifacation.BaseSpecification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +29,8 @@ public class AuthorService implements BaseService<AuthorDto> {
     private final AuthorRepository authorRepository;
     private final AuthorMapper authorMapper;
     private final NewsMapper newsMapper;
+    private final SecurityService securityService;
+    private final UserRepository userRepository;
 
     @Override
     public Page<AuthorDto> findAll(SearchDto searchDto, Pageable pageable) {
@@ -65,6 +70,12 @@ public class AuthorService implements BaseService<AuthorDto> {
     public void deleteById(Long id) {
         authorRepository.deleteById(id);
 
+    }
+
+
+    public Author createByAuthUser(){
+        User user = userRepository.findById(SecurityService.getAuthenticationUserId()).orElseThrow(()-> new  UserNotFoundException("User not found, please, try repeat authentication"));
+      return authorRepository.save(authorMapper.convertFromUserToEntity(user));
     }
 
     private Specification<Author> getSpecification(SearchDto searchDto) {

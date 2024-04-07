@@ -28,7 +28,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         log.error("JwtAuthenticationEntryPoint: " + authException.toString());
 
-        Arrays.stream(authException.getStackTrace()).forEach(err -> log.error("JwtAuthenticationEntryPoint: " + err + "\n"));
+        Arrays.stream(authException.getStackTrace()).forEach(err -> log.error("JwtAuthenticationEntryPoint: " + err));
 
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

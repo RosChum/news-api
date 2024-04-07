@@ -3,6 +3,7 @@ package com.example.newsapi.mapper;
 import com.example.newsapi.dto.AuthorDto;
 import com.example.newsapi.dto.ShortAuthorDto;
 import com.example.newsapi.model.Author;
+import com.example.newsapi.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -19,7 +20,7 @@ public interface AuthorMapper {
     Author createEntity(AuthorDto authorDto);
 
     Author convertToEntity(AuthorDto authorDto);
-
+    Author convertFromUserToEntity(User user);
     AuthorDto convertToDto(Author author);
 
     ShortAuthorDto convertToShortDto(Author author);

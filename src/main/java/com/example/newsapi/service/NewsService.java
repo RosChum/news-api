@@ -79,7 +79,7 @@ public class NewsService implements BaseService<NewsDto> {
         news.setNewsСategoryList(newsCategoryMapper.convertToListEntity(newsCategoryService.create(dto.getNewsCategory())));
         news.setCommentList(new ArrayList<>());
         NewsDto newsDto = newsMapper.convertToDto(newsRepository.save(news));
-        newsDto.setShortAuthorDto(authorMapper.convertToShortDto(authorRepository.findById(dto.getShortAuthorDto().getId()).orElseThrow()));
+        newsDto.setShortAuthorDto(authorMapper.convertToShortDto(authorRepository.findById(dto.getShortAuthorDto().getId()).orElse(authorService.createByAuthUser())));
         newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         return newsDto;
     }
