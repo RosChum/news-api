@@ -50,7 +50,7 @@ public class RefreshTokenService {
 
 
     @Async
-    @Scheduled(fixedDelay = 20000)
+    @Scheduled(cron = "@midnight")
     public void deleteTokenByExpiredToken(){
         log.info("deleteTokenByExpiredToken " + refreshTokenRepository.existsAllByExpireDateBefore(Instant.now()));
         if (refreshTokenRepository.existsAllByExpireDateBefore(Instant.now())) {
