@@ -52,9 +52,9 @@ public class RefreshTokenService {
     @Async
     @Scheduled(fixedDelay = 20000)
     public void deleteTokenByExpiredToken(){
-        log.info("deleteTokenByExpiredToken " + refreshTokenRepository.existsAllByExpireDateAfter(Instant.now()));
-        if (refreshTokenRepository.existsAllByExpireDateAfter(Instant.now())) {
-            refreshTokenRepository.deleteAllByExpireDateAfter(Instant.now());
+        log.info("deleteTokenByExpiredToken " + refreshTokenRepository.existsAllByExpireDateBefore(Instant.now()));
+        if (refreshTokenRepository.existsAllByExpireDateBefore(Instant.now())) {
+            refreshTokenRepository.deleteAllByExpireDateBefore(Instant.now());
         }
     }
 
