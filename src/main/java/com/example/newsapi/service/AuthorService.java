@@ -72,10 +72,9 @@ public class AuthorService implements BaseService<AuthorDto> {
 
     }
 
-
     public Author createByAuthUser(){
         User user = userRepository.findById(SecurityService.getAuthenticationUserId()).orElseThrow(()-> new  UserNotFoundException("User not found, please, try repeat authentication"));
-      return authorRepository.save(authorMapper.convertFromUserToEntity(user));
+        return authorRepository.save(authorMapper.convertFromUserToEntity(user));
     }
 
     private Specification<Author> getSpecification(SearchDto searchDto) {

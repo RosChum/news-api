@@ -4,6 +4,7 @@ import com.example.newsapi.security.UserDetailsServiceImpl;
 import com.example.newsapi.security.jwt.JwtAuthenticationEntryPoint;
 import com.example.newsapi.security.jwt.JwtTokenFilter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableMethodSecurity
 @RequiredArgsConstructor
+@Slf4j
 public class SecurityConfiguration {
 
     private final UserDetailsServiceImpl detailsService;
@@ -54,7 +56,9 @@ public class SecurityConfiguration {
         httpSecurity.authorizeHttpRequests((auth) -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/news").permitAll()
+                        .requestMatchers("/api/author/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
                         .requestMatchers("/api/news/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
+                        .requestMatchers("/api/category/**").hasAnyRole("ADMIN", "MODERATOR")
                         .anyRequest().authenticated())
                 .exceptionHandling(httpSecurityExceptionHandlingConfigurer ->
                         httpSecurityExceptionHandlingConfigurer.authenticationEntryPoint(jwtAuthenticationEntryPoint))
@@ -63,8 +67,8 @@ public class SecurityConfiguration {
                 .sessionManagement(httpSecuritySessionManagementConfigurer ->
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
-
+                .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class).logout((log) ->
+                        log.invalidateHttpSession(true).logoutUrl("/api/auth/logout"));
         return httpSecurity.build();
 
     }

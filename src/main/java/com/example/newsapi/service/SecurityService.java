@@ -84,6 +84,13 @@ public class SecurityService {
         return userDetails.getUserId();
     }
 
+    public static String getAuthenticationUserEmail() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AppUserDetails userDetails = (AppUserDetails) authentication.getPrincipal();
+        return userDetails.getUsername();
+    }
+
+
     public void logout() {
         refreshTokenService.deleteByUserId(getAuthenticationUserId());
     }

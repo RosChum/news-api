@@ -4,6 +4,7 @@ import com.example.newsapi.exception.ContentNotFound;
 import com.example.newsapi.model.RefreshToken;
 import com.example.newsapi.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RefreshTokenService {
 
     @Value("${app.jwt.expireRefreshToken}")
@@ -48,9 +50,12 @@ public class RefreshTokenService {
 
 
     @Async
-    @Scheduled(cron = "@midnight")
+    @Scheduled(fixedDelay = 20000)
     public void deleteTokenByExpiredToken(){
-        refreshTokenRepository.deleteAllByExpireDateAfter(Instant.now());
+        log.info("deleteTokenByExpiredToken " + refreshTokenRepository.existsAllByExpireDateAfter(Instant.now()));
+        if (refreshTokenRepository.existsAllByExpireDateAfter(Instant.now())) {
+            refreshTokenRepository.deleteAllByExpireDateAfter(Instant.now());
+        }
     }
 
 

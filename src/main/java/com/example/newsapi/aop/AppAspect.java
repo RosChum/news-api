@@ -1,7 +1,9 @@
 package com.example.newsapi.aop;
 
 import com.example.newsapi.exception.AccessRightsException;
+import com.example.newsapi.repository.AuthorRepository;
 import com.example.newsapi.repository.NewsRepository;
+import com.example.newsapi.service.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,6 +25,8 @@ public class AppAspect {
 
     @Autowired
     private NewsRepository newsRepository;
+    @Autowired
+    private AuthorRepository authorRepository;
 
     @Pointcut("@annotation(com.example.newsapi.annotation.CheckAccessRights)")
     public void checkingAccessRights() {
@@ -30,14 +34,16 @@ public class AppAspect {
 
     @Before("checkingAccessRights()")
     public void checkingAccessRightsAfterUpdateNews() {
+
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
         var pathVariables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         Long newsId = Long.valueOf(pathVariables.get("id"));
-        Long authorId = Long.valueOf(pathVariables.get("accountId"));
+//        Long authorId = Long.valueOf(pathVariables.get("accountId"));
 
-        if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId().equals(authorId)) {
+        if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId()
+                .equals(authorRepository.findByEmail(SecurityService.getAuthenticationUserEmail()).orElseThrow().getId())) {
 
             throw new AccessRightsException("Нет прав на редактирование новости");
         }
