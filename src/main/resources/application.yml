@@ -18,4 +18,4 @@ app:
   jwt:
     secret: ec25fd87-f952-4dfa-8b91-a8e34f2b3301
     expireToken: 10m
-    expireRefreshToken: 30s
+    expireRefreshToken: 30m
