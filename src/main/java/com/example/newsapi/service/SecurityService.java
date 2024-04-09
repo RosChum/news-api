@@ -11,7 +11,9 @@ import com.example.newsapi.model.RefreshToken;
 import com.example.newsapi.model.User;
 import com.example.newsapi.repository.UserRepository;
 import com.example.newsapi.security.AppUserDetails;
+import com.example.newsapi.security.UserDetailsServiceImpl;
 import com.example.newsapi.security.jwt.JwtProvider;
+import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.stream.Collectors;
@@ -35,6 +38,8 @@ public class SecurityService {
     private final UserRepository userRepository;
 
     private final AuthenticationManager authenticationManager;
+
+    private final UserDetailsServiceImpl userDetailsService;
 
     private final JwtProvider jwtProvider;
 
@@ -70,7 +75,10 @@ public class SecurityService {
 
             refreshTokenService.deleteByUserId(user.getId());
             RefreshToken updateRefreshToken = refreshTokenService.createTokenByUserId(user.getId());
-            String updateAccessToken = jwtProvider.generateToken((AppUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+
+            AppUserDetails userDetails = (AppUserDetails) userDetailsService.loadUserByUsername(user.getEmail());
+
+            String updateAccessToken = jwtProvider.generateToken(userDetails);
 
             return new RefreshTokenDto(updateAccessToken, updateRefreshToken.getToken());
         }

@@ -1,5 +1,6 @@
 package com.example.newsapi.controller;
 
+import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.CommentDto;
 import com.example.newsapi.service.CommentService;
 import jakarta.validation.Valid;
@@ -30,18 +31,21 @@ public class CommentController implements BaseController<CommentDto> {
 
     @PostMapping("/add")
     @Override
+    @CheckAccessRights
     public ResponseEntity<CommentDto> create(@RequestBody @Valid CommentDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(dto));
     }
 
     @PutMapping("/update/{id}/{accountId}")
     @Override
+    @CheckAccessRights
     public ResponseEntity<CommentDto> update(@PathVariable Long id, @RequestBody @Valid CommentDto dto) {
         return ResponseEntity.ok().body(commentService.update(id, dto));
     }
 
     @DeleteMapping("/delete/{id}/{accountId}")
     @Override
+    @CheckAccessRights
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         commentService.deleteById(id);
         return ResponseEntity.ok().build();

@@ -1,9 +1,11 @@
 package com.example.newsapi.exception;
 
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,4 +29,11 @@ public class RestControllerAdviceExecutor {
         log.info("Ошибка при заполнении полей " + errorMessage);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(errorMessage));
     }
+
+//    @ExceptionHandler(AuthenticationException.class)
+//    public ResponseEntity<HttpServletResponse> authenticationException(AuthenticationException exception, HttpServletResponse response){
+//
+//
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//    }
 }

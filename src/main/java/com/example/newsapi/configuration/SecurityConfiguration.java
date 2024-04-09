@@ -54,7 +54,8 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/auth/logout").authenticated()
+                        .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/news").permitAll()
                         .requestMatchers("/api/author/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
                         .requestMatchers("/api/news/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
@@ -68,7 +69,7 @@ public class SecurityConfiguration {
                         httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class).logout((log) ->
-                        log.invalidateHttpSession(true).logoutUrl("/api/auth/logout"));
+                        log.invalidateHttpSession(true).clearAuthentication(true));
         return httpSecurity.build();
 
     }

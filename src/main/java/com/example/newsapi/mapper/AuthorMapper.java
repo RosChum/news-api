@@ -20,6 +20,7 @@ public interface AuthorMapper {
     Author createEntity(AuthorDto authorDto);
 
     Author convertToEntity(AuthorDto authorDto);
+    @Mapping(target = "news", expression = "java(new ArrayList<>())")
     Author convertFromUserToEntity(User user);
     AuthorDto convertToDto(Author author);
 

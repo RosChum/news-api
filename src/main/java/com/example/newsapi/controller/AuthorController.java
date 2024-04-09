@@ -1,5 +1,6 @@
 package com.example.newsapi.controller;
 
+import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.AuthorDto;
 import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.service.BaseService;
@@ -41,12 +42,14 @@ public class AuthorController implements BaseController<AuthorDto> {
 
     @PutMapping("/{id}")
     @Override
+    @CheckAccessRights
     public ResponseEntity<AuthorDto> update(@PathVariable Long id, @RequestBody @Valid AuthorDto dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 
     @DeleteMapping("/{id}")
     @Override
+    @CheckAccessRights
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         service.deleteById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

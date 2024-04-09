@@ -8,6 +8,7 @@ import com.example.newsapi.mapper.AuthorMapper;
 import com.example.newsapi.mapper.CommentMapper;
 import com.example.newsapi.mapper.NewsCategoryMapper;
 import com.example.newsapi.mapper.NewsMapper;
+import com.example.newsapi.model.Author;
 import com.example.newsapi.model.Author_;
 import com.example.newsapi.model.News;
 import com.example.newsapi.model.News_;
@@ -76,10 +77,13 @@ public class NewsService implements BaseService<NewsDto> {
     @Override
     public NewsDto create(NewsDto dto) {
         News news = newsMapper.convertToEntity(dto);
+        Author author = authorRepository.findById(dto.getShortAuthorDto().getId()).orElse(authorService.createByAuthUser());
+        news.setAuthor(author);
+        author.getNews().add(news);
         news.setNewsСategoryList(newsCategoryMapper.convertToListEntity(newsCategoryService.create(dto.getNewsCategory())));
         news.setCommentList(new ArrayList<>());
         NewsDto newsDto = newsMapper.convertToDto(newsRepository.save(news));
-        newsDto.setShortAuthorDto(authorMapper.convertToShortDto(authorRepository.findById(dto.getShortAuthorDto().getId()).orElse(authorService.createByAuthUser())));
+        newsDto.setShortAuthorDto(authorMapper.convertToShortDto(author));
         newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         return newsDto;
     }

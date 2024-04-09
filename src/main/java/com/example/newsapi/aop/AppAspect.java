@@ -1,6 +1,10 @@
 package com.example.newsapi.aop;
 
 import com.example.newsapi.exception.AccessRightsException;
+import com.example.newsapi.exception.UserNotFoundException;
+import com.example.newsapi.model.Author;
+import com.example.newsapi.model.Role;
+import com.example.newsapi.model.RoleType;
 import com.example.newsapi.repository.AuthorRepository;
 import com.example.newsapi.repository.NewsRepository;
 import com.example.newsapi.service.SecurityService;
@@ -17,6 +21,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Map;
+import java.util.Set;
 
 @Aspect
 @Component
@@ -42,10 +47,12 @@ public class AppAspect {
         Long newsId = Long.valueOf(pathVariables.get("id"));
 //        Long authorId = Long.valueOf(pathVariables.get("accountId"));
 
-        if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId()
-                .equals(authorRepository.findByEmail(SecurityService.getAuthenticationUserEmail()).orElseThrow().getId())) {
+        Author author =  authorRepository.findByEmail(SecurityService.getAuthenticationUserEmail()).orElseThrow(()-> new  UserNotFoundException("Author not found"));
 
-            throw new AccessRightsException("Нет прав на редактирование новости");
+        if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId()
+                .equals(author.getId()) || author.getRoleList().stream().map(Role::getRoleType).noneMatch(type-> Set.of(RoleType.ROLE_MODERATOR,RoleType.ROLE_ADMIN).contains(type))) {
+
+            throw new AccessRightsException("Нет прав на редактирование");
         }
     }
 

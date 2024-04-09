@@ -32,22 +32,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String token = getToken(request);
 
             if (jwtProvider.checkValidToken(token)) {
-
                 UserDetails userDetails = userDetailsService.loadUserByUsername(jwtProvider.getUserEmail(token));
-
                 UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-
                 usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
 
-            } else {
-                log.error("JwtTokenFilter doFilterInternal: UncheckValidToken: " + token);
             }
 
         } catch (Exception ex) {
-            log.error("JwtTokenFilter doFilterInternal: Authentication error!");
+            log.error("JwtTokenFilter doFilterInternal: Authentication error! " + ex.getMessage());
         }
-
         filterChain.doFilter(request, response);
     }
 
