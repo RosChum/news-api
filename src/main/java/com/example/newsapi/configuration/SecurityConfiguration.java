@@ -57,7 +57,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/auth/logout").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/news").permitAll()
-                        .requestMatchers("/api/author/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
+                        .requestMatchers("/api/account/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
                         .requestMatchers("/api/news/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
                         .requestMatchers("/api/category/**").hasAnyRole("ADMIN", "MODERATOR")
                         .anyRequest().authenticated())

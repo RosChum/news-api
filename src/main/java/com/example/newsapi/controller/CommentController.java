@@ -36,14 +36,14 @@ public class CommentController implements BaseController<CommentDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(dto));
     }
 
-    @PutMapping("/update/{id}/{accountId}")
+    @PutMapping("/update/{id}")
     @Override
     @CheckAccessRights
     public ResponseEntity<CommentDto> update(@PathVariable Long id, @RequestBody @Valid CommentDto dto) {
         return ResponseEntity.ok().body(commentService.update(id, dto));
     }
 
-    @DeleteMapping("/delete/{id}/{accountId}")
+    @DeleteMapping("/delete/{id}")
     @Override
     @CheckAccessRights
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {

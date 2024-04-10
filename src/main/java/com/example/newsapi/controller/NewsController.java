@@ -42,7 +42,7 @@ public class NewsController implements BaseController<NewsDto> {
         return ResponseEntity.status(HttpStatus.CREATED).body(newsService.create(dto));
     }
 
-    @PutMapping("/update/{id}/{accountId}")
+    @PutMapping("/update/{id}")
     @Override
     @CheckAccessRights
     public ResponseEntity<NewsDto> update(@PathVariable Long id, @RequestBody @Valid NewsDto dto) {
@@ -50,7 +50,7 @@ public class NewsController implements BaseController<NewsDto> {
         return ResponseEntity.ok(newsService.update(id, dto));
     }
 
-    @DeleteMapping("/delete/{id}/{accountId}")
+    @DeleteMapping("/delete/{id}")
     @Override
     @CheckAccessRights
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
