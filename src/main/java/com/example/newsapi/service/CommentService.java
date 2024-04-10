@@ -3,9 +3,9 @@ package com.example.newsapi.service;
 import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.CommentDto;
 import com.example.newsapi.exception.ContentNotFound;
-import com.example.newsapi.mapper.AuthorMapper;
+import com.example.newsapi.mapper.AccountMapper;
 import com.example.newsapi.mapper.CommentMapper;
-import com.example.newsapi.model.Author;
+import com.example.newsapi.model.Account;
 import com.example.newsapi.model.Comment;
 import com.example.newsapi.repository.CommentRepository;
 import com.example.newsapi.repository.NewsRepository;
@@ -24,8 +24,8 @@ public class CommentService implements BaseService<CommentDto> {
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final NewsRepository newsRepository;
-    private final AuthorService authorService;
-    private final AuthorMapper authorMapper;
+    private final AccountService accountService;
+    private final AccountMapper accountMapper;
 
     public List<CommentDto> findAll() {
         return commentMapper.convertToListDto(commentRepository.findAll());
@@ -45,14 +45,14 @@ public class CommentService implements BaseService<CommentDto> {
         comment.setNews(newsRepository.findById(dto.getNewsId())
                 .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найден для комментария не найдена", dto.getNewsId()))));
         comment.setText(dto.getText());
-        Author author = authorMapper.convertToEntity(authorService.findById(dto.getShortAuthorDto().getId()));
-        if (author.getId() == null) {
-            authorService.create(authorMapper.shortAuthorDtoConvertToDto(dto.getShortAuthorDto()));
+        Account account = accountMapper.convertToEntity(accountService.findById(dto.getShortAccountDto().getId()));
+        if (account.getId() == null) {
+            accountService.create(accountMapper.shortAuthorDtoConvertToDto(dto.getShortAccountDto()));
         }
-        comment.setAuthor(author);
+        comment.setAccount(account);
         comment.setTimeCreated(Instant.now());
         CommentDto commentDto = commentMapper.convertToDto(commentRepository.save(comment));
-        commentDto.setShortAuthorDto(authorMapper.convertToShortDto(comment.getAuthor()));
+        commentDto.setShortAccountDto(accountMapper.convertToShortDto(comment.getAccount()));
         commentDto.setNewsId(comment.getNews().getId());
         return commentDto;
 
@@ -63,13 +63,13 @@ public class CommentService implements BaseService<CommentDto> {
     @Override
     public CommentDto update(Long id, CommentDto dto) {
         Comment comment = commentMapper.convertToEntity(findById(id));
-        comment.setAuthor(authorMapper.convertToEntity(authorService.findById(dto.getShortAuthorDto().getId())));
+        comment.setAccount(accountMapper.convertToEntity(accountService.findById(dto.getShortAccountDto().getId())));
         comment.setTimeCreated(Instant.now());
         comment.setText(dto.getText());
         comment.setNews(newsRepository.findById(dto.getNewsId())
                 .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найден для комментария не найдена", dto.getNewsId()))));
         CommentDto commentDto = commentMapper.convertToDto(commentRepository.save(comment));
-        commentDto.setShortAuthorDto(authorMapper.convertToShortDto(comment.getAuthor()));
+        commentDto.setShortAccountDto(accountMapper.convertToShortDto(comment.getAccount()));
         commentDto.setNewsId(comment.getNews().getId());
         return commentDto;
     }

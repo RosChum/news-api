@@ -2,13 +2,10 @@ package com.example.newsapi.mapper;
 
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.ShortNewsDto;
-import com.example.newsapi.exception.ContentNotFound;
-import com.example.newsapi.model.Author;
 import com.example.newsapi.model.News;
-import com.example.newsapi.repository.AuthorRepository;
+import com.example.newsapi.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.MessageFormat;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +13,10 @@ import java.util.List;
 public abstract class NewsMapperDelegate implements NewsMapper {
 
     @Autowired
-    private AuthorRepository authorRepository;
+    private AccountRepository accountRepository;
 
     @Autowired
-    private AuthorMapper authorMapper;
+    private AccountMapper accountMapper;
 
     @Autowired
     private NewsCategoryMapper newsCategoryMapper;
@@ -46,7 +43,7 @@ public abstract class NewsMapperDelegate implements NewsMapper {
         newsList.forEach(news -> {
             NewsDto newsDto = new NewsDto();
             newsDto.setId(news.getId());
-            newsDto.setShortAuthorDto(authorMapper.convertToShortDto(news.getAuthor()));
+            newsDto.setShortAccountDto(accountMapper.convertToShortDto(news.getAccount()));
             newsDto.setTitle(news.getTitle());
             newsDto.setDescription(news.getDescription());
             newsDto.setCreateTime(news.getCreateTime());

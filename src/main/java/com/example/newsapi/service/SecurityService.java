@@ -13,7 +13,6 @@ import com.example.newsapi.repository.UserRepository;
 import com.example.newsapi.security.AppUserDetails;
 import com.example.newsapi.security.UserDetailsServiceImpl;
 import com.example.newsapi.security.jwt.JwtProvider;
-import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,9 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.text.MessageFormat;
-import java.time.Instant;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +31,7 @@ public class SecurityService {
     private final PasswordEncoder passwordEncoder;
 
     private final RefreshTokenService refreshTokenService;
+    private final AccountService accountService;
 
     private final UserRepository userRepository;
 
@@ -60,10 +58,11 @@ public class SecurityService {
     public void register(AuthenticationUserDto authenticationUserDto) {
         User user = userMapper.convertFromAuthDtoToEntity(authenticationUserDto);
         user.setPassword(passwordEncoder.encode(authenticationUserDto.getPassword()));
-        user.setCreateTime(Instant.now());
         user.setRoleList(authenticationUserDto.getRoles().stream().peek(role ->
                 role.getUsers().add(user)).collect(Collectors.toSet()));
-        userRepository.save(user);
+
+        accountService.createByUser(user);
+//        userRepository.save(user);
     }
 
     public RefreshTokenDto refreshToken(RefreshTokenDto refreshTokenDto) {

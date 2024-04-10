@@ -10,7 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class AuthorDto {
+public class AccountDto {
 
     private Long id;
 

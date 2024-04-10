@@ -4,15 +4,15 @@ import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.exception.ContentNotFound;
-import com.example.newsapi.mapper.AuthorMapper;
+import com.example.newsapi.mapper.AccountMapper;
 import com.example.newsapi.mapper.CommentMapper;
 import com.example.newsapi.mapper.NewsCategoryMapper;
 import com.example.newsapi.mapper.NewsMapper;
-import com.example.newsapi.model.Author;
-import com.example.newsapi.model.Author_;
+import com.example.newsapi.model.Account;
+import com.example.newsapi.model.Account_;
 import com.example.newsapi.model.News;
 import com.example.newsapi.model.News_;
-import com.example.newsapi.repository.AuthorRepository;
+import com.example.newsapi.repository.AccountRepository;
 import com.example.newsapi.repository.CommentRepository;
 import com.example.newsapi.repository.NewsRepository;
 import com.example.newsapi.specifacation.BaseSpecification;
@@ -37,9 +37,9 @@ public class NewsService implements BaseService<NewsDto> {
 
     private final NewsRepository newsRepository;
     private final NewsMapper newsMapper;
-    private final AuthorMapper authorMapper;
-    private final AuthorService authorService;
-    private final AuthorRepository authorRepository;
+    private final AccountMapper accountMapper;
+    private final AccountService accountService;
+    private final AccountRepository accountRepository;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
     private final NewsCategoryMapper newsCategoryMapper;
@@ -58,7 +58,7 @@ public class NewsService implements BaseService<NewsDto> {
             newsDto.setCreateTime(news.getCreateTime());
             newsDto.setCountComment(commentRepository.countByNews_Id(news.getId()));
             newsDto.setUpdateTime(news.getUpdateTime());
-            newsDto.setShortAuthorDto(authorMapper.convertToShortDto(news.getAuthor()));
+            newsDto.setShortAccountDto(accountMapper.convertToShortDto(news.getAccount()));
             return newsDto;
         }).toList(), pageable, newsPage.getTotalElements());
     }
@@ -68,7 +68,7 @@ public class NewsService implements BaseService<NewsDto> {
         News news = newsRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найдена", id)));
         NewsDto newsDto = newsMapper.convertToDto(news);
-        newsDto.setShortAuthorDto(authorMapper.convertToShortDto(news.getAuthor()));
+        newsDto.setShortAccountDto(accountMapper.convertToShortDto(news.getAccount()));
         newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         newsDto.setCommentDtos(commentMapper.convertToListDto(news.getCommentList()));
         return newsDto;
@@ -77,13 +77,13 @@ public class NewsService implements BaseService<NewsDto> {
     @Override
     public NewsDto create(NewsDto dto) {
         News news = newsMapper.convertToEntity(dto);
-        Author author = authorRepository.findById(dto.getShortAuthorDto().getId()).orElse(authorService.createByAuthUser());
-        news.setAuthor(author);
-        author.getNews().add(news);
+        Account account = accountRepository.findById(SecurityService.getAuthenticationUserId()).orElseThrow();
+        news.setAccount(account);
+        account.getNews().add(news);
         news.setNewsСategoryList(newsCategoryMapper.convertToListEntity(newsCategoryService.create(dto.getNewsCategory())));
         news.setCommentList(new ArrayList<>());
         NewsDto newsDto = newsMapper.convertToDto(newsRepository.save(news));
-        newsDto.setShortAuthorDto(authorMapper.convertToShortDto(author));
+        newsDto.setShortAccountDto(accountMapper.convertToShortDto(account));
         newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
         return newsDto;
     }
@@ -98,7 +98,7 @@ public class NewsService implements BaseService<NewsDto> {
         existNews.setDescription(dto.getDescription());
         existNews.setUpdateTime(Instant.now());
         NewsDto resultDto = newsMapper.convertToDto(newsRepository.save(existNews));
-        resultDto.setShortAuthorDto(authorMapper.convertToShortDto(authorRepository.findById(dto.getShortAuthorDto().getId()).orElseThrow()));
+        resultDto.setShortAccountDto(accountMapper.convertToShortDto(accountRepository.findById(SecurityService.getAuthenticationUserId()).orElseThrow()));
         resultDto.setNewsCategory(newsCategoryMapper.convertToListDto(existNews.getNewsСategoryList()));
         return resultDto;
     }
@@ -116,8 +116,8 @@ public class NewsService implements BaseService<NewsDto> {
                 .and(getBetween(News_.createTime, searchDto.getTimeFrom() != null ? Instant.parse(searchDto.getTimeFrom()) : null,
                         searchDto.getTimeTo() != null ? Instant.parse(searchDto.getTimeTo()) : null))
                 .and(BaseSpecification.getInCategoryNews(searchDto.getNewsCategory()))
-                .and(BaseSpecification.joinAuthors(Author_.LAST_NAME, searchDto.getLastNameAuthor()))
-                .and(BaseSpecification.joinAuthors(Author_.FIRST_NAME, searchDto.getFirstNameAuthor()));
+                .and(BaseSpecification.joinAuthors(Account_.LAST_NAME, searchDto.getLastNameAuthor()))
+                .and(BaseSpecification.joinAuthors(Account_.FIRST_NAME, searchDto.getFirstNameAuthor()));
     }
 
 }

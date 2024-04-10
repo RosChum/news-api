@@ -1,5 +1,6 @@
 package com.example.newsapi.specifacation;
 
+import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.model.*;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.metamodel.SingularAttribute;
@@ -11,9 +12,13 @@ import java.util.function.Supplier;
 
 public class BaseSpecification {
 
-    public static <T> Specification<T> getEqual(SingularAttribute<T, String> field, String value) {
+    public static Specification getAccountSpecification(SearchDto searchDto) {
+        return getEqual(Account_.id,searchDto.getAuthorId());
+    }
+
+    public static <T,V> Specification<T> getEqual(SingularAttribute<T, V> field, V value) {
         return checkValueNull(value, () -> (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(criteriaBuilder.lower(root.get(field)), value.toLowerCase().trim());
+            return criteriaBuilder.equal(root.get(field), value);
         });
     }
 
@@ -58,17 +63,17 @@ public class BaseSpecification {
     public static Specification<News> joinAuthors(String name, String value) {
         return checkValueNull(value, () -> {
             return (root, query, criteriaBuilder) -> {
-                Join<News, Author> joinTable = root.join(News_.AUTHOR);
+                Join<News, Account> joinTable = root.join(News_.account);
                 return criteriaBuilder.like(joinTable.get(name), "%" + value + "%");
             };
         });
     }
 
-    public static Specification<Author> joinNews(Long authorId) {
+    public static Specification<Account> joinNews(Long authorId) {
         return checkValueNull(authorId, () -> {
             return (root, query, criteriaBuilder) -> {
-                Join<Author, News> newsJoin = root.join(Author_.news);
-                return criteriaBuilder.equal(newsJoin.get(News_.author), authorId);
+                Join<Account, News> newsJoin = root.join(Account_.news);
+                return criteriaBuilder.equal(newsJoin.get(News_.account), authorId);
             };
         });
     }

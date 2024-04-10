@@ -23,7 +23,7 @@ public class NewsDto {
     private String description;
 
     @Valid
-    private ShortAuthorDto shortAuthorDto;
+    private ShortAccountDto shortAccountDto;
 
     private Instant createTime;
 

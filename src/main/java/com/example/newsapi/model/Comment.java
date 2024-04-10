@@ -20,8 +20,8 @@ public class Comment {
 
     @JsonBackReference
     @ManyToOne()
-    @JoinColumn(name = "author_id", referencedColumnName = "id")
-    private Author author;
+    @JoinColumn(name = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @Column(name = "text")
     private String text;

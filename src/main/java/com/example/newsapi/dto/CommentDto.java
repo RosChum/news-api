@@ -18,7 +18,7 @@ public class CommentDto {
     private Long id;
 
     @Valid
-    private ShortAuthorDto shortAuthorDto;
+    private ShortAccountDto shortAccountDto;
 
     @NotNull(message = "id новости должно быть указано")
     @Positive(message = "id новости должно быть больше 0")

@@ -2,10 +2,10 @@ package com.example.newsapi.aop;
 
 import com.example.newsapi.exception.AccessRightsException;
 import com.example.newsapi.exception.UserNotFoundException;
-import com.example.newsapi.model.Author;
+import com.example.newsapi.model.Account;
 import com.example.newsapi.model.Role;
 import com.example.newsapi.model.RoleType;
-import com.example.newsapi.repository.AuthorRepository;
+import com.example.newsapi.repository.AccountRepository;
 import com.example.newsapi.repository.NewsRepository;
 import com.example.newsapi.service.SecurityService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ public class AppAspect {
     @Autowired
     private NewsRepository newsRepository;
     @Autowired
-    private AuthorRepository authorRepository;
+    private AccountRepository accountRepository;
 
     @Pointcut("@annotation(com.example.newsapi.annotation.CheckAccessRights)")
     public void checkingAccessRights() {
@@ -47,11 +47,12 @@ public class AppAspect {
         Long newsId = Long.valueOf(pathVariables.get("id"));
 //        Long authorId = Long.valueOf(pathVariables.get("accountId"));
 
-        Author author =  authorRepository.findByEmail(SecurityService.getAuthenticationUserEmail()).orElseThrow(()-> new  UserNotFoundException("Author not found"));
+        Account account = accountRepository.findByEmail(SecurityService.getAuthenticationUserEmail()).orElseThrow(() -> new UserNotFoundException("Author not found"));
 
-        if (!newsRepository.findById(newsId).orElseThrow().getAuthor().getId()
-                .equals(author.getId()) || author.getRoleList().stream().map(Role::getRoleType).noneMatch(type-> Set.of(RoleType.ROLE_MODERATOR,RoleType.ROLE_ADMIN).contains(type))) {
+        if (!newsRepository.findById(newsId).orElseThrow().getAccount().getId()
+                .equals(account.getId()) && account.getRoleList().stream().map(Role::getRoleType).noneMatch(type -> Set.of(RoleType.ROLE_MODERATOR, RoleType.ROLE_ADMIN).contains(type))) {
 
+            log.info("AppAspect Нет прав на редактирование");
             throw new AccessRightsException("Нет прав на редактирование");
         }
     }

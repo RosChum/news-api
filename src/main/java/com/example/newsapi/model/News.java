@@ -32,8 +32,8 @@ public class News {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(columnDefinition = "author_id", referencedColumnName = "id")
-    private Author author;
+    @JoinColumn(columnDefinition = "account_id", referencedColumnName = "id")
+    private Account account;
 
     @OneToMany(mappedBy = "news", cascade = CascadeType.ALL)
     private List<Comment> commentList;

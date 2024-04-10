@@ -1,7 +1,7 @@
 package com.example.newsapi.controller;
 
 import com.example.newsapi.annotation.CheckAccessRights;
-import com.example.newsapi.dto.AuthorDto;
+import com.example.newsapi.dto.AccountDto;
 import com.example.newsapi.dto.SearchDto;
 import com.example.newsapi.service.BaseService;
 import jakarta.validation.Valid;
@@ -17,33 +17,33 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/author")
-public class AuthorController implements BaseController<AuthorDto> {
+public class AccountController implements BaseController<AccountDto> {
 
-    private final BaseService<AuthorDto> service;
+    private final BaseService<AccountDto> service;
 
     @Override
     @GetMapping
-    public ResponseEntity<Page<AuthorDto>> getAll(SearchDto searchDto, Pageable pageable) {
+    public ResponseEntity<Page<AccountDto>> getAll(SearchDto searchDto, Pageable pageable) {
         log.info("AuthorController getAll searchDto {} pageable {} ", searchDto, pageable);
         return ResponseEntity.ok(service.findAll(searchDto, pageable));
     }
 
     @GetMapping("/{id}")
     @Override
-    public ResponseEntity<AuthorDto> findById(@PathVariable Long id) {
+    public ResponseEntity<AccountDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
     @PostMapping
     @Override
-    public ResponseEntity<AuthorDto> create(@RequestBody @Valid AuthorDto dto) {
+    public ResponseEntity<AccountDto> create(@RequestBody @Valid AccountDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(dto));
     }
 
     @PutMapping("/{id}")
     @Override
     @CheckAccessRights
-    public ResponseEntity<AuthorDto> update(@PathVariable Long id, @RequestBody @Valid AuthorDto dto) {
+    public ResponseEntity<AccountDto> update(@PathVariable Long id, @RequestBody @Valid AccountDto dto) {
         return ResponseEntity.ok(service.update(id, dto));
     }
 

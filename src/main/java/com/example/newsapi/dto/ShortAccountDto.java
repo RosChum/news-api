@@ -9,7 +9,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class ShortAuthorDto {
+public class ShortAccountDto {
 
     @NotNull(message = "Id автора не должно быть пустым")
     @Positive(message = "Id автора должно быт больше 0")
