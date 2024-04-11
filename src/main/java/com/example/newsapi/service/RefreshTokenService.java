@@ -1,6 +1,6 @@
 package com.example.newsapi.service;
 
-import com.example.newsapi.exception.ContentNotFound;
+import com.example.newsapi.exception.ContentNotFoundException;
 import com.example.newsapi.model.RefreshToken;
 import com.example.newsapi.repository.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class RefreshTokenService {
     }
 
     public RefreshToken findByToken(String token) {
-        return refreshTokenRepository.findByToken(token).orElseThrow(()-> new ContentNotFound("Refresh token not found. Please, repeat signin"));
+        return refreshTokenRepository.findByToken(token).orElseThrow(()-> new ContentNotFoundException("Refresh token not found. Please, repeat signin"));
     }
 
     public boolean checkExpireRefreshToken(RefreshToken token){

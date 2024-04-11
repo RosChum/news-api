@@ -1,7 +1,7 @@
 package com.example.newsapi.service;
 
 import com.example.newsapi.dto.NewsCategoryDto;
-import com.example.newsapi.exception.ContentNotFound;
+import com.example.newsapi.exception.ContentNotFoundException;
 import com.example.newsapi.mapper.NewsCategoryMapper;
 import com.example.newsapi.model.NewsСategory;
 import com.example.newsapi.repository.NewsCategoryRepository;
@@ -35,7 +35,7 @@ public class NewsCategoryService {
 
     public NewsCategoryDto findById(Long id) {
         return newsCategoryMapper.convertToDto(newsCategoryRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Категория новости с id {0} не найдена", id))));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Категория новости с id {0} не найдена", id))));
     }
 
 
@@ -56,7 +56,7 @@ public class NewsCategoryService {
 
     public NewsCategoryDto update(NewsCategoryDto newsCategoryDto) {
         NewsСategory newsСategory = newsCategoryRepository.findById(newsCategoryDto.getId())
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Категория новости с id {0} не найдена", newsCategoryDto.getId())));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Категория новости с id {0} не найдена", newsCategoryDto.getId())));
         newsСategory.setNewsCategory(newsCategoryDto.getNewsCategory());
         return newsCategoryMapper.convertToDto(newsCategoryRepository.save(newsСategory));
     }

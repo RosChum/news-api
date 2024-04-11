@@ -2,8 +2,7 @@ package com.example.newsapi.service;
 
 import com.example.newsapi.dto.AccountDto;
 import com.example.newsapi.dto.SearchDto;
-import com.example.newsapi.exception.ContentNotFound;
-import com.example.newsapi.exception.UserNotFoundException;
+import com.example.newsapi.exception.ContentNotFoundException;
 import com.example.newsapi.mapper.AccountMapper;
 import com.example.newsapi.mapper.NewsMapper;
 import com.example.newsapi.model.Account;
@@ -49,7 +48,7 @@ public class AccountService implements BaseService<AccountDto> {
     @Override
     public AccountDto findById(Long id) {
         return accountMapper.convertToDto(accountRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Аккаунт с id {0} не найден", id))));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Аккаунт с id {0} не найден", id))));
     }
 
 
@@ -60,7 +59,7 @@ public class AccountService implements BaseService<AccountDto> {
 
     @Override
     public AccountDto update(Long id, AccountDto dto) {
-        Account account = accountRepository.findById(id).orElseThrow(() -> new ContentNotFound(MessageFormat.format("Аккаунт с id {0} не найден", id)));
+        Account account = accountRepository.findById(id).orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Аккаунт с id {0} не найден", id)));
         account.setLastName(dto.getLastName());
         account.setFirstName(dto.getFirstName());
         return accountMapper.convertToDto(accountRepository.save(account));

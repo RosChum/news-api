@@ -2,7 +2,7 @@ package com.example.newsapi.service;
 
 import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.CommentDto;
-import com.example.newsapi.exception.ContentNotFound;
+import com.example.newsapi.exception.ContentNotFoundException;
 import com.example.newsapi.mapper.AccountMapper;
 import com.example.newsapi.mapper.CommentMapper;
 import com.example.newsapi.model.Account;
@@ -35,7 +35,7 @@ public class CommentService implements BaseService<CommentDto> {
     @Override
     public CommentDto findById(Long id) {
         return commentMapper.convertToDto(commentRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("комментарий с id {0} не найден", id))));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("комментарий с id {0} не найден", id))));
     }
 
     @Transactional
@@ -43,7 +43,7 @@ public class CommentService implements BaseService<CommentDto> {
     public CommentDto create(CommentDto dto) {
         Comment comment = new Comment();
         comment.setNews(newsRepository.findById(dto.getNewsId())
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найден для комментария не найдена", dto.getNewsId()))));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Новость с id {0} не найден для комментария не найдена", dto.getNewsId()))));
         comment.setText(dto.getText());
         Account account = accountMapper.convertToEntity(accountService.findById(dto.getShortAccountDto().getId()));
         if (account.getId() == null) {
@@ -67,7 +67,7 @@ public class CommentService implements BaseService<CommentDto> {
         comment.setTimeCreated(Instant.now());
         comment.setText(dto.getText());
         comment.setNews(newsRepository.findById(dto.getNewsId())
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найден для комментария не найдена", dto.getNewsId()))));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Новость с id {0} не найден для комментария не найдена", dto.getNewsId()))));
         CommentDto commentDto = commentMapper.convertToDto(commentRepository.save(comment));
         commentDto.setShortAccountDto(accountMapper.convertToShortDto(comment.getAccount()));
         commentDto.setNewsId(comment.getNews().getId());

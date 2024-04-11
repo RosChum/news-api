@@ -3,7 +3,7 @@ package com.example.newsapi.service;
 import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.SearchDto;
-import com.example.newsapi.exception.ContentNotFound;
+import com.example.newsapi.exception.ContentNotFoundException;
 import com.example.newsapi.mapper.AccountMapper;
 import com.example.newsapi.mapper.CommentMapper;
 import com.example.newsapi.mapper.NewsCategoryMapper;
@@ -66,7 +66,7 @@ public class NewsService implements BaseService<NewsDto> {
     @Override
     public NewsDto findById(Long id) {
         News news = newsRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} не найдена", id)));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Новость с id {0} не найдена", id)));
         NewsDto newsDto = newsMapper.convertToDto(news);
         newsDto.setShortAccountDto(accountMapper.convertToShortDto(news.getAccount()));
         newsDto.setNewsCategory(newsCategoryMapper.convertToListDto(news.getNewsСategoryList()));
@@ -93,7 +93,7 @@ public class NewsService implements BaseService<NewsDto> {
     @Override
     public NewsDto update(Long id, NewsDto dto) {
         News existNews = newsRepository.findById(id)
-                .orElseThrow(() -> new ContentNotFound(MessageFormat.format("Новость с id {0} для обновления  не найдена", id)));
+                .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Новость с id {0} для обновления  не найдена", id)));
         existNews.setTitle(dto.getTitle());
         existNews.setDescription(dto.getDescription());
         existNews.setUpdateTime(Instant.now());
