@@ -8,7 +8,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     show-sql: true
     properties:
       hibernate:
@@ -17,5 +17,5 @@ spring:
 app:
   jwt:
     secret: ec25fd87-f952-4dfa-8b91-a8e34f2b3301
-    expireToken: 10m
-    expireRefreshToken: 30m
+    expireToken: 50m
+    expireRefreshToken: 90m

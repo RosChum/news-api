@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @RestControllerAdvice
 @Slf4j
-public class RestControllerAdviceExecutor extends ResponseEntityExceptionHandler {
+public class RestControllerAdviceExecutor {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> notValid(MethodArgumentNotValidException exception) {
@@ -31,9 +32,9 @@ public class RestControllerAdviceExecutor extends ResponseEntityExceptionHandler
     }
 
 //    @ExceptionHandler(AuthenticationException.class)
-//    public ResponseEntity<HttpServletResponse> authenticationException(HttpServletResponse response) {
-//
-//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+//    public ResponseEntity<ErrorResponse> authenticationException(AuthenticationException exception) {
+//        ErrorResponse errorResponse = new ErrorResponse(exception.getMessage());
+//        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
 //    }
 
     @ExceptionHandler(AccessRightsException.class)

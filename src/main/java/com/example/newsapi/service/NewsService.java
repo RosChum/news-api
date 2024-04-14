@@ -88,7 +88,6 @@ public class NewsService implements BaseService<NewsDto> {
         return newsDto;
     }
 
-    @CheckAccessRights
     @Transactional
     @Override
     public NewsDto update(Long id, NewsDto dto) {
@@ -103,12 +102,11 @@ public class NewsService implements BaseService<NewsDto> {
         return resultDto;
     }
 
-    @CheckAccessRights
+
     @Override
     public void deleteById(Long id) {
         newsRepository.deleteById(id);
     }
-
 
     private Specification<News> getSpecification(SearchDto searchDto) {
         return getLike(News_.title, searchDto.getTitleNews())

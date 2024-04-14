@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,12 +34,14 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
+
+        String invalidCredentials = "Invalid login or password";
+
         Map<String, Object> body = new HashMap<>();
         body.put("Status", HttpStatus.UNAUTHORIZED.value());
-        body.put("message", authException.getMessage());
+        body.put("message", authException.getMessage().equals("Bad credentials") ? invalidCredentials : authException.getMessage());
         body.put("path", request.getServletPath());
-
-        objectMapper.writeValue(response.getOutputStream(),body);
-
+        objectMapper.writeValue(response.getWriter(), body);
     }
+
 }

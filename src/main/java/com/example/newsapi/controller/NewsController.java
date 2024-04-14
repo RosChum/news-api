@@ -1,5 +1,6 @@
 package com.example.newsapi.controller;
 
+import com.example.newsapi.annotation.AccessType;
 import com.example.newsapi.annotation.CheckAccessRights;
 import com.example.newsapi.dto.NewsDto;
 import com.example.newsapi.dto.SearchDto;
@@ -44,7 +45,7 @@ public class NewsController implements BaseController<NewsDto> {
 
     @PutMapping("/update/{id}")
     @Override
-    @CheckAccessRights
+    @CheckAccessRights(checkAccessType = AccessType.News)
     public ResponseEntity<NewsDto> update(@PathVariable Long id, @RequestBody @Valid NewsDto dto) {
         log.info("update " + id + " " + dto);
         return ResponseEntity.ok(newsService.update(id, dto));
@@ -52,7 +53,7 @@ public class NewsController implements BaseController<NewsDto> {
 
     @DeleteMapping("/delete/{id}")
     @Override
-    @CheckAccessRights
+    @CheckAccessRights(checkAccessType = AccessType.News)
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         newsService.deleteById(id);
         return ResponseEntity.ok().build();

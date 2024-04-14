@@ -38,7 +38,6 @@ public class NewsCategoryService {
                 .orElseThrow(() -> new ContentNotFoundException(MessageFormat.format("Категория новости с id {0} не найдена", id))));
     }
 
-
     public List<NewsCategoryDto> create(List<NewsCategoryDto> dtos) {
         List<NewsСategory> existNewsCategory = newsCategoryRepository
                 .findAllByNewsCategoryIn(dtos.stream().map(NewsCategoryDto::getNewsCategory).collect(Collectors.toList()));

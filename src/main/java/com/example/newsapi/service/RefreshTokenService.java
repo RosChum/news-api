@@ -21,7 +21,6 @@ public class RefreshTokenService {
 
     @Value("${app.jwt.expireRefreshToken}")
     private Duration expireRefreshToken;
-
     private final RefreshTokenRepository refreshTokenRepository;
 
     public RefreshToken createTokenByUserId(Long userId){

@@ -9,6 +9,7 @@ import com.example.newsapi.model.Account;
 import com.example.newsapi.model.Account_;
 import com.example.newsapi.model.User;
 import com.example.newsapi.repository.AccountRepository;
+import com.example.newsapi.repository.RoleRepository;
 import com.example.newsapi.repository.UserRepository;
 import com.example.newsapi.specifacation.BaseSpecification;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class AccountService implements BaseService<AccountDto> {
     private final AccountMapper accountMapper;
     private final NewsMapper newsMapper;
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public Page<AccountDto> findAll(SearchDto searchDto, Pageable pageable) {
@@ -68,7 +70,6 @@ public class AccountService implements BaseService<AccountDto> {
     @Override
     public void deleteById(Long id) {
         accountRepository.deleteById(id);
-
     }
 
     public Account createByUser(User user) {
@@ -76,12 +77,11 @@ public class AccountService implements BaseService<AccountDto> {
          account.setRoleList(user.getRoleList());
          account.setNews(new ArrayList<>());
          account.setComments(new ArrayList<>());
+         roleRepository.saveAll(account.getRoleList());
         return accountRepository.save(account);
-
     }
 
     private Specification getSpecification(SearchDto searchDto) {
-
         return BaseSpecification.getAccountSpecification(searchDto)
                 .and(BaseSpecification.getEqual(Account_.firstName, searchDto.getFirstNameAuthor()))
                 .and(BaseSpecification.getEqual(Account_.lastName, searchDto.getLastNameAuthor()))

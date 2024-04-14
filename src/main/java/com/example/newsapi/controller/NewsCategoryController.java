@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +22,13 @@ public class NewsCategoryController {
     private final NewsCategoryService newsCategoryService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN','USER','MODERATOR')")
     public ResponseEntity<Page<NewsCategoryDto>> getAll(SearchDto searchDto, Pageable pageable) {
         return ResponseEntity.ok(newsCategoryService.findAll(pageable));
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','USER','MODERATOR')")
     public ResponseEntity<NewsCategoryDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(newsCategoryService.findById(id));
     }
